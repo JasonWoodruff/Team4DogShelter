@@ -99,7 +99,7 @@ avl_node *avlTree::balance(avl_node *temp)
 /*
 Insert Element into the tree
 */
-avl_node *avlTree::insert(avl_node *root, Dog value)
+avl_node *avlTree::insert(avl_node *root, Dog *value)
 {
 	if (root == NULL)
 	{
@@ -109,12 +109,12 @@ avl_node *avlTree::insert(avl_node *root, Dog value)
 		root->right = NULL;
 		return root;
 	}
-	else if (value.getID() < root->data.getID())
+	else if (value->getID() < root->data->getID())
 	{
 		root->left = insert(root->left, value);
 		root = balance(root);
 	}
-	else if (value.getID() >= root->data.getID())
+	else if (value->getID() >= root->data->getID())
 	{
 		root->right = insert(root->right, value);
 		root = balance(root);
@@ -125,22 +125,23 @@ avl_node *avlTree::insert(avl_node *root, Dog value)
 /*
 Delete an Element from the tree
 */
-avl_node *avlTree::deleteNode(avl_node* root, string dogId)
+avl_node *avlTree::deleteNode(avl_node* root, string dogId, bool *ptr_removed)
 {
-	// STEP 1: PERFORM STANDARD BST DELETE
+	//This pointer keeps track of whether a removal actually occurs
+	*ptr_removed = false;
 
 	if (root == NULL)
 		return root;
 
 	// If the key to be deleted is smaller than the root's key,
 	// then it lies in left subtree
-	if (dogId < root->data.getID())
-		root->left = deleteNode(root->left, dogId);
+	if (dogId < root->data->getID())
+		root->left = deleteNode(root->left, dogId, ptr_removed);
 
 	// If the key to be deleted is greater than the root's key,
 	// then it lies in right subtree
-	else if (dogId > root->data.getID())
-		root->right = deleteNode(root->right, dogId);
+	else if (dogId > root->data->getID())
+		root->right = deleteNode(root->right, dogId, ptr_removed);
 
 	// if key is same as root's key, then This is the node
 	// to be deleted
@@ -167,6 +168,8 @@ avl_node *avlTree::deleteNode(avl_node* root, string dogId)
 			else // One child case
 				*root = *temp; // Copy the contents of the non-empty child
 
+			//The removal occured, set ptr_removed to true
+			*ptr_removed = true;
 			delete temp;
 		}
 		else
@@ -179,7 +182,7 @@ avl_node *avlTree::deleteNode(avl_node* root, string dogId)
 			root->data = temp->data;
 
 			// Delete the inorder successor
-			root->right = deleteNode(root->right, temp->data.getID());
+			root->right = deleteNode(root->right, temp->data->getID(), ptr_removed);
 		}
 	}
 
@@ -237,7 +240,7 @@ void avlTree::display(avl_node *ptr, int level)
 			cout << "Root -> ";
 		for (i = 0; i < level && ptr != root; i++)
 			cout << "        ";
-		cout << ptr->data.getID();
+		cout << ptr->data->getID();
 		display(ptr->left, level + 1);
 	}
 }
@@ -250,7 +253,7 @@ void avlTree::inorder(avl_node *tree)
 	if (tree == NULL)
 		return;
 	inorder(tree->left);
-	cout << tree->data.toString() << endl;
+	cout << tree->data->toString() << endl;
 	inorder(tree->right);
 }
 /*
@@ -260,7 +263,7 @@ void avlTree::preorder(avl_node *tree)
 {
 	if (tree == NULL)
 		return;
-	cout << tree->data.toString() << endl;
+	cout << tree->data->toString() << endl;
 	preorder(tree->left);
 	preorder(tree->right);
 }
@@ -274,5 +277,5 @@ void avlTree::postorder(avl_node *tree)
 		return;
 	postorder(tree->left);
 	postorder(tree->right);
-	cout << tree->data.toString() << endl;
+	cout << tree->data->toString() << endl;
 }

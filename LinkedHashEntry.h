@@ -19,13 +19,13 @@ private:
 	as an int. I don't know if this string belongs, but I'll leave it there until I know for sure.
 	JASON: The string is needed because the conversion to digits is only needed to determine the placement of the Dog in the Hash Table.  
 	The key and value must retain their original values when they are put in the Table so additional entries and searches can compare against them.*/
-	Dog value; //the Dog object associated with the dog id
+	Dog *value; //the Dog object associated with the dog id
 	LinkedHashEntry *next;
 
 public:
-	LinkedHashEntry(Dog entry)
+	LinkedHashEntry(Dog *entry)
 	{
-		this->key = entry.getID();
+		this->key = entry->getID();
 		this->value = entry;
 		this->next = nullptr;
 	}
@@ -35,12 +35,12 @@ public:
 		return key;
 	}
 
-	Dog getValue()
+	Dog *getValue()
 	{
 		return value;
 	}
 
-	void setValue(Dog value)
+	void setValue(Dog *value)
 	{
 		this->value = value;
 	}
