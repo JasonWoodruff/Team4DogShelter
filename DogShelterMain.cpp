@@ -39,15 +39,18 @@ bool displayDogInfoByIdSearch(HashMap* dogHash);	//displays all of a dog's info 
 bool displayEfficiencyReport();		//print an efficiency report
 
 //Team Choice 1
-bool updateDog();	//This function will search the tree for the dog by id.
+bool updateDog(HashMap* dogHash, avlTree* dogTree);
+bool updateDogMenu();
+int getUpdateDogMenuChoice();
+bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& age, string& gender, string& breed, string& desc);
+bool updateName(string& name);
+bool updateAge(string& age);
+bool updateDesc(string& desc);
+
+//This function will search the tree for the dog by id.
 //If the dog is found, call updateDogMenu to work on it.
 //Then, keep looping until the user is done updating.
 //If the dog isn't found, display an error message.
-bool updateDogMenu();
-bool updateName();
-bool updateAge();
-bool updateBreed();
-bool updateDesc();
 
 bool isValidDogId(string dogId);
 
@@ -148,7 +151,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		}
 		case 4:
 		{
-			updateDog();
+			updateDog(dogHash, dogTree);
 			break;
 		}
 		case 5:
@@ -181,8 +184,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		}
 		case 10:
 		{
-			updateDogFile(/*dogIdTree*/);
-			break;
+			updateDogFile(/*dogHash*/);
 		}
 		case 11:
 		{
@@ -362,40 +364,151 @@ bool displayEfficiencyReport()
 }
 
 //Team Choice 1
-bool updateDog()
+bool updateDog(HashMap *dogHash, avlTree *dogTree)
 {
-	string input;
-	cout << "Enter the ID of the Dog to search for.\nUse the format \"DOG###\" -> ";
-	cin >> input;
-	// call the search function of the BST
-	// Display the Dog (override the ostream? <<)
-	// write a function to verify that ID is entered in correct format?
+	string dogId;
+	cout << "Enter the ID of the Dog to update.  Use the format \"DOG###\"\n";
+	cout << "Enter the ID here: ";
+	cin >> dogId;
 	cout << endl;
+
+	//JASON - Get the correct syntax, we do not need a validation function
+	while (!isValidDogId(dogId))
+	{
+		cout << "Invalid input.  Use the format \"DOG###\"\n";
+		cout << "Enter the ID here: ";
+		cin >> dogId;
+		cout << endl;
+	}
+
+	Dog *dog = dogHash->get(dogId);
+
+	if (dog == nullptr)
+		cout << "Dog not found" << endl << endl;
+	else
+	{
+		cout << dog->toString() << endl;
+		string id = dog->getID();
+		string name = dog->getName();
+		string age = dog->getAge();
+		string gender = dog->getGender();
+		string breed = dog->getBreed();
+		string desc = dog->getDescription();
+
+		dogHash->remove(dogId);
+		dogTree->deleteNode(dogId);
+		
+		int choice = 0;
+		while (choice != 4)
+		{
+			updateDogMenu();
+			choice = getUpdateDogMenuChoice();
+			processUpdateDogMenuChoice(choice, id, name, age, gender, breed, desc);
+		}
+
+		Dog* updatedDog = new Dog(id, name, age, gender, breed, desc);
+		Dog::keyNumGenerator--;
+
+		dogHash->put(updatedDog);
+		dogTree->insert(updatedDog);
+	}
+
 	return true;
 }
 
 bool updateDogMenu()
 {
+	cout << "-----------------Update Options-----------------" << endl << endl;
+	cout << "1  - Update Name" << endl;
+	cout << "2  - Update Age" << endl;
+	cout << "3  - Update Description" << endl;
+	cout << "4  - Return to Main Menu" << endl << endl;
+	cout << "Enter your choice here: ";
+
 	return true;
 }
 
-bool updateName()
+int getUpdateDogMenuChoice()
 {
+	string input;
+	int choice;
+
+	cin >> input;
+	choice = atoi(input.c_str());
+
+	while (choice < 1 || choice > 4)
+	{
+		cout << "Invalid menu choice, try again: ";
+		cin >> input;
+		choice = atoi(input.c_str());
+	}
+	cout << endl;
+	return choice;
+}
+
+bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& age, string& gender, string& breed, string& desc)
+{
+	switch (choice)
+	{
+		case 1:
+		{
+			updateName(name);
+			break;
+		}
+		case 2:
+		{
+			updateAge(age);
+			break;
+		}
+		case 3:
+		{
+			updateDesc(desc);
+			break;
+		}
+		case 4:
+		{
+			cout << "Returning to Main Menu..." << endl << endl;
+			break;
+		}
+	}
 	return true;
 }
 
-bool updateAge()
+bool updateName(string& name)
 {
+	string dogName;
+	cout << "Enter a new name: ";
+	cin >> dogName;
+	cout << endl;
+	name = dogName;
 	return true;
 }
 
-bool updateBreed()
+bool updateAge(string& age)
 {
+	string dogAge;
+	cout << "Enter a new age (must be \"Puppy\", \"Young\", \"Adult\", or \"Senior\": ";
+	cin >> dogAge;
+
+	while (dogAge != "Puppy" && dogAge != "Young" && dogAge != "Adult" && dogAge != "Senior")
+	{
+		cout << "Invalid input.  Age must be \"Puppy\", \"Young\", \"Adult\", or \"Senior\"" << endl;
+		cout << "Enter a new age: ";
+		cin >> dogAge;
+	}
+	cout << endl;
+	age = dogAge;
 	return true;
 }
 
-bool updateDesc()
+bool updateDesc(string& desc)
 {
+	string dogDesc;
+	cout << "Enter a new description: ";
+	cin.ignore();
+	getline(cin, dogDesc);
+	cout << endl;
+	desc = dogDesc;
 	return true;
 }
 
