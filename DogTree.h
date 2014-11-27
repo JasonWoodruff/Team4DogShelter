@@ -8,7 +8,7 @@ using namespace std;
 //node structure
 struct avl_node
 {
-	Dog *data;
+	Dog data;
 	struct avl_node *left;
 	struct avl_node *right;
 };
@@ -27,8 +27,8 @@ private:
 	avl_node *lr_rotation(avl_node *);
 	avl_node *rl_rotation(avl_node *);
 	avl_node *balance(avl_node *);
-	avl_node *insert(avl_node *, Dog *);	//root, done
-	avl_node* deleteNode(avl_node*, string, bool*);
+	avl_node *insert(avl_node *, Dog);	//root, done
+	avl_node* deleteNode(avl_node*, string);
 	avl_node *minValueNode(avl_node*);
 	void destroySubTree(avl_node * temp);
 	void display(avl_node *, int);		//root, done
@@ -53,14 +53,8 @@ public:
 		destroySubTree(root);
 	}
 
-	//for the Efficiency Report
-	int getHeight()
-	{
-		return height(root);
-	}
-
 	//insert
-	void insert(Dog *dog)
+	void insert(Dog dog)
 	{
 		root = insert(root, dog);
 	}
@@ -68,13 +62,7 @@ public:
 	//delete
 	void deleteNode(string dogId)
 	{
-		bool removed = false;
-		bool *ptr_removed = &removed;
-		root = deleteNode(root, dogId, ptr_removed);
-		
-		//If a Dog was found and removed, put its Id in the Queue
-		if (removed == true)
-			Dog::nextAvailable.push(dogId);
+		root = deleteNode(root, dogId);
 	}
 
 	//display

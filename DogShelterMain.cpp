@@ -17,7 +17,6 @@ Kevin Chen		-	Binary Search Tree
 #include <iostream>
 #include <Windows.h> //included by James for 'system("CLS")', a clear screen command for aesthetic purposes
 #include <string>
-#include <cctype>
 #include <fstream>
 #include "Dog.h"
 #include "HashMap.h"
@@ -25,8 +24,10 @@ Kevin Chen		-	Binary Search Tree
 using namespace std;
 
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree);
-bool updateDogFile(/*BinaryTree& dogIdTree*/);			//probably want to change this later to take arguments
+bool readDogsToTreeFromFile(avlTree& dogTree);		//open the input file and read the dogs into a tree
+bool readDogsToHashFromFile(HashMap& dogHash);		//open the input file and read the dogs into a hash
 
+bool updateDogFile(/*BinaryTree& dogIdTree*/);			//probably want to change this later to take arguments
 
 bool mainMenu();					//display the main menu
 int getMainMenuChoice();
@@ -34,7 +35,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree);
 
 bool addDog(HashMap* dogHash, avlTree* dogTree);						//add a dog to the tree and hash
 bool removeDog(HashMap* dogHash, avlTree* dogTree);					//delete a dog from the tree and hash
-bool displayDogInfoByIdSearch(HashMap* dogHash);	//displays all of a dog's info if it's found with an id search
+bool displayDogInfoByIdSearch(HashMap& dogHash);	//displays all of a dog's info if it's found with an id search
 
 bool displayEfficiencyReport();		//print an efficiency report
 
@@ -48,8 +49,6 @@ bool updateName();
 bool updateAge();
 bool updateBreed();
 bool updateDesc();
-
-bool isValidDogId(string dogId);
 
 /*Team Choice 2	-	Note:	This section may be tricky because we'll have to create many different trees.
 I suggest we start with Team Choice 1 and do this if we have time.*/
@@ -83,9 +82,6 @@ int main()
 		processMainMenuChoice(choice, dogHash, dogTree);
 	}
 
-	delete dogTree;
-	delete dogHash;
-	
 	system("pause");
 	return 0;
 }
@@ -143,7 +139,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		}
 		case 3:
 		{
-			displayDogInfoByIdSearch(dogHash);
+			displayDogInfoByIdSearch(*dogHash);
 			break;
 		}
 		case 4:
@@ -217,12 +213,12 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
 		
 		//Populate the Hash Table
-		dogHash->put(dog);
+		dogHash->put(*dog);
+		Dog::keyNumGenerator--;
 
 		//Populate the AVL Tree
-		dogTree->insert(dog);
-
-		cout << "KeyNumGenerator: " << Dog::keyNumGenerator << endl;
+		dogTree->insert(*dog);
+		Dog::keyNumGenerator--;
 	}
 	dogFile.close();
 	return true;
@@ -298,55 +294,40 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 		cout << "Dog finalized. Returning to main menu..." << endl;
 		system("pause"); system("CLS");
 	}
-	dogHash->put(newDog);
-	dogTree->insert(newDog);
+	dogHash->put(*newDog);
+	dogTree->insert(*newDog);
 
 	return true;
 }
  //Be sure to enqueue the deleted Dog's ID into Dog::nextAvailable 
 bool removeDog(HashMap* dogHash, avlTree* dogTree)
 {
-	string dogId;
-	cout << "Enter the ID of the dog to remove.  Use the format \"DOG###\"\n";
-	cout << "Enter the ID here: ";
-	cin >> dogId;
-
-	while (!isValidDogId(dogId))
-	{
-		cout << "Invalid input.  Use the format \"DOG###\"\n";
-		cout << "Enter the ID here: ";
-		cin >> dogId;
-	}
-
-	dogHash->remove(dogId);
-	dogTree->deleteNode(dogId);
-
 	return true;
 }
 
-bool displayDogInfoByIdSearch(HashMap* dogHash)
+bool displayDogInfoByIdSearch(HashMap& dogHash)
 {
-	string dogId;
-	cout << "Enter the ID of the Dog to search for.  Use the format \"DOG###\"\n";
+	string input;
+	cout << "Enter the ID of the Dog to search for.\nUse the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
-	cin >> dogId;
+	cin >> input;
 	cout << endl;
 
 	//JASON - Get the correct syntax, we do not need a validation function
-	while (!isValidDogId(dogId))
+	while (input.length() != 6)
 	{
-		cout << "Invalid input.  Use the format \"DOG###\"\n";
+		cout << "Invalid input, please use the format \"DOG###\"\n";
 		cout << "Enter the ID here: ";
-		cin >> dogId;
+		cin >> input;
 		cout << endl;
 	}
 	
-	Dog *dog = dogHash->get(dogId);
+	Dog dog = dogHash.get(input);
 
-	if (dog->getName() == "")
+	if (dog.getName() == "")
 		cout << "Dog not found" << endl << endl;
 	else
-		cout << dogHash->get(dogId)->toString() << endl;
+		cout << dogHash.get(input).toString() << endl;
 
 	return true;
 }
@@ -397,19 +378,6 @@ bool updateBreed()
 bool updateDesc()
 {
 	return true;
-}
-
-bool isValidDogId(string dogId)
-{
-	bool isValid = false;
-
-	if (dogId.length() == 6)
-	{
-		if (dogId[0] == 'D' && dogId[1] == 'O' && dogId[2] == 'G' && isdigit(dogId[3]) && isdigit(dogId[4]) && isdigit(dogId[5]))
-			isValid = true;
-	}
-
-	return isValid;
 }
 
 /*Team Choice 2	-	Note:	This section may be tricky because we'll have to create many different trees.
