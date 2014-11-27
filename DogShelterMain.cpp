@@ -343,7 +343,7 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 	
 	Dog *dog = dogHash->get(dogId);
 
-	if (dog->getName() == "")
+	if (dog == nullptr)
 		cout << "Dog not found" << endl << endl;
 	else
 		cout << dogHash->get(dogId)->toString() << endl;
