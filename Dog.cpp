@@ -96,6 +96,6 @@ string Dog::toString()
 
 ostream& operator<<(ostream& os, const Dog& dt)
 {
-    os << dt.getID() << "," << dt.getName() << "," << dt.getAge() << "," << dt.getGender() << "," << dt.getBreed() << "," << dt.getDescription();
+	os << dt.getID() << "," << dt.getName() << "," << dt.getGender() << "," << dt.getAge() << "," << dt.getBreed() << "," << dt.getDescription();
     return os;
 }

@@ -25,8 +25,8 @@ Kevin Chen		-	Binary Search Tree
 using namespace std;
 
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree);
-bool updateDogFile(/*BinaryTree& dogIdTree*/);			//probably want to change this later to take arguments
-
+bool updateDogFile(HashMap* dogHash);			//probably want to change this later to take arguments
+char yesNoInput(string prompt);
 
 bool mainMenu();					//display the main menu
 int getMainMenuChoice();
@@ -69,7 +69,7 @@ int main()
 	HashMap* dogHash = new HashMap();
 	readDogsFromFile(dogHash, dogTree);
 
-	while (choice != 11)
+	while (choice != 10)
 	{
 		//Database was cleared, must recreate the data structures
 		if (choice == 9)
@@ -102,8 +102,7 @@ bool mainMenu()
 	cout << "7  - Display indented search tree" << endl;
 	cout << "8  - Display efficiency report" << endl;
 	cout << "9  - Clear the Database" << endl;
-	cout << "10 - Update the file" << endl;
-	cout << "11 - Quit" << endl << endl;
+	cout << "10 - Update the file / Quit" << endl << endl;
 	cout << "Enter your choice here: ";
 
 	return true;
@@ -117,7 +116,7 @@ int getMainMenuChoice()
 	cin >> input;
 	choice = atoi(input.c_str());
 
-	while (choice < 1 || choice > 11)
+	while (choice < 1 || choice > 10)
 	{
 		cout << "Invalid menu choice, try again: ";
 		cin >> input;
@@ -181,11 +180,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		}
 		case 10:
 		{
-			updateDogFile(/*dogIdTree*/);
-			break;
-		}
-		case 11:
-		{
+			updateDogFile(dogHash);
 			cout << "Thank you, now exiting..." << endl << endl;
 			break;
 		}
@@ -228,14 +223,71 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 	return true;
 }
 
-bool updateDogFile(/*BinaryTree& dogIdTree*/)
+bool updateDogFile(HashMap* dogHash)
 {
 	ofstream out;
-	//out.open(FILENAME.c_str());
-	// will update dogs hre
-
-	//out.close();
+	char choice;
+	
+	// will update dogs here
+	choice = yesNoInput("\nWould you like to save changes to the file? (Y/N) -> ");
+	
+	if (choice == 'Y')
+	{
+		out.open(FILENAME.c_str());
+		
+		for (int i = 0; i <= 31; i++)
+		{
+			Dog* aDog;
+			string id = to_string(i);
+			string nextID = to_string(i + 1);
+			if (i < 10){
+				id = "DOG00" + id;
+				if (i < 9)
+					nextID = "DOG00" + nextID;
+				else
+					nextID = "DOG0" + nextID;
+			}
+			else if (i < 100)
+			{
+				id = "DOG0" + id;
+				if (i < 99)
+					nextID = "DOG0" + nextID;
+				else
+					nextID = "DOG" + nextID;
+			}
+			else
+				id = "DOG" + id;
+			aDog = dogHash->get(id);
+			if (aDog != nullptr)
+				out << *aDog;
+			if (dogHash->get(nextID) != nullptr)//make sure not to print a endl
+				// at the end, because that will cause an error when reading in
+				out << endl;
+		}
+		if (out.good())
+			cout << "File succesfully saved" << endl;
+		out.close();
+	}
+	else
+		cout << "File not changed." << endl;
+	
 	return true;
+}
+
+char yesNoInput(string prompt)
+{
+	char choice;
+	cout << prompt;
+	do
+	{
+		cin >> choice;
+		choice = toupper(choice);
+		if (choice != 'Y' && choice != 'N')
+		{
+			cout << "Only 'Y' and 'N' are acceptable.  Please enter again-> ";
+		}
+	} while (choice != 'Y' && choice != 'N');
+	return choice;
 }
 
 bool addDog(HashMap* dogHash, avlTree* dogTree)
