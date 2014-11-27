@@ -1,0 +1,25 @@
+DOG001,Rex,Male,Puppy,English Setter,Playful
+DOG002,Max,Male,Young,Russel Terrier,Lazy
+DOG003,Alice,Female,Puppy,French Bulldog,Shy
+DOG004,Ang,Male,Adult,Cocker Spaniel,Likes the outdoors
+DOG005,Alex,Male,Young,Fox Hound,Keeps to himself
+DOG006,Sasha,Female,Puppy,Akita,Likes people
+DOG007,Elizabeth,Female,Senior,Shiba Inu,Needy
+DOG008,Ein,Male,Adult,Pug,Prefers the indoors
+DOG009,Fuji,Female,Puppy,Tibetan Mastiff,Loyal
+DOG010,Lupin,Male,Young,Basset Hound,Friendly
+DOG011,Snoopy,Male,Adult,Irish Terrier,Cute and friendly
+DOG012,Charlie,Male,Puppy,Irish Setter,Likes frequent walks
+DOG013,Pavlov,Male,Young,Labrador,Very active
+DOG014,Marley,Female,Senior,Maltese,Friendly
+DOG015,Miki,Female,Young,Dalmatian,Lazy
+DOG016,Jack,Male,Puppy,Chihuahua,Playful
+DOG017,Buddy,Male,Senior,Poodle,Energetic
+DOG018,Chip,Male,Adult,American Eskimo,Likes people
+DOG019,Rover,Female,Young,Great Dane,Loyal and protective
+DOG020,Fito,Male,Adult,German Shepherd,Smart
+DOG021,Bella,Female,Puppy,Schnauzer,Shy
+DOG022,Lucy,Female,Young,Dachschund,Energetic and friendly
+DOG023,Daisy,Female,Young,Rottweiler,Energetic and loyal
+DOG024,Lily,Female,Adult,Pomeranian,Cute and friendly
+DOG025,Molly,Female,Young,Great Dane,Keeps to herself
