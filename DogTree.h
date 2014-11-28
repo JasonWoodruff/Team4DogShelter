@@ -45,11 +45,7 @@ public:
 
 	~avlTree()
 	{
-		destroySubTree(root);
-	}
-
-	void clear()
-	{
+		Dog::setKeyNumGenerator(1);
 		destroySubTree(root);
 	}
 
@@ -74,7 +70,7 @@ public:
 		
 		//If a Dog was found and removed, put its Id in the Queue
 		if (removed == true)
-			Dog::nextAvailable.push(dogId);
+			Dog::setNextAvailable(dogId);
 	}
 
 	//display

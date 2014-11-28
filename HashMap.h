@@ -24,6 +24,7 @@ public:
 
 	~HashMap()
 	{
+		Dog::setKeyNumGenerator(1);
 		clear();
 	}
 

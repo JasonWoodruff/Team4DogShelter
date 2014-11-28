@@ -44,6 +44,16 @@ string Dog::getBreed() const
 string Dog::getDescription() const
 { return description; }
 
+int Dog::getKeyNumGenerator()
+{ return keyNumGenerator; }
+
+string Dog::getNextAvailable()
+{ 
+	string nextId = nextAvailable.front();
+	nextAvailable.pop();
+	return nextId; 
+}
+
 void Dog::setID(string key)
 { ID = key; }
 
@@ -61,6 +71,12 @@ void Dog::setBreed(string type)
 
 void Dog::setDescription(string desc)
 { description = desc; }
+
+void Dog::setKeyNumGenerator(int key)
+{ keyNumGenerator = key; }
+
+void Dog::setNextAvailable(string id)
+{ nextAvailable.push(id); }
 
 //I made a change to this function so it accounts for available ids that were previously deleted - Jason
 string Dog::generateID()

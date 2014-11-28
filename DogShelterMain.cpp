@@ -2,9 +2,10 @@
 CIS22C Team 4 Project:	Dog Shelter Management Program
 
 Purpose:	Create an easily accessible and editable catalog of dogs in a shelter
-and allow the user to search through it based on dog attributes
+			and allow the user to search through it based on dog attributes
 
-@author		Jason Woodruff	-	Project Coordinator
+@author		
+Jason Woodruff	-	Project Coordinator
 Stacy Wheeler	-	Data Record
 Bryson Li		-	I/O
 James Juchau	-	Hashed Table
@@ -171,7 +172,6 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		{
 			delete dogHash;
 			delete dogTree;
-			Dog::keyNumGenerator = 1; //reset the keys
 			break;
 		}
 		case 10:
@@ -243,44 +243,6 @@ bool updateDogFile(HashMap* dogHash)
 	else
 		cout << "File not changed." << endl;
 
-		/*
-		JASON - I am leaving Bryson's old code here in case we need it later.  I don't think we should be generating ID's like this 
-		because we want to get the IDs from the Hash Table instead.  I moved the majority of this function into HashMap.h.
-		This version does create a trailing newline because I'm not sure how to determine the last item in the Hash Table, 
-		so I changed the file read function to ignore emtpy lines.
-		*/
-
-		//for (int i = 0; i <= TABLE_SIZE; i++)
-		//{
-		//	Dog* aDog;
-		//	string id = to_string(i);
-		//	string nextID = to_string(i + 1);
-		//	if (i < 10){
-		//		id = "DOG00" + id;
-		//		if (i < 9)
-		//			nextID = "DOG00" + nextID;
-		//		else
-		//			nextID = "DOG0" + nextID;
-		//	}
-		//	else if (i < 100)
-		//	{
-		//		id = "DOG0" + id;
-		//		if (i < 99)
-		//			nextID = "DOG0" + nextID;
-		//		else
-		//			nextID = "DOG" + nextID;
-		//	}
-		//	else
-		//		id = "DOG" + id;
-		//	aDog = dogHash->get(id);
-		//	if (aDog != nullptr)
-		//		out << *aDog;
-		//	if (dogHash->get(nextID) != nullptr)//make sure not to print a endl
-		//		// at the end, because that will cause an error when reading in
-		//		out << endl;
-		//}
-	
-
 	return true;
 }
 
@@ -301,9 +263,7 @@ char yesNoInput(string prompt)
 }
 
 bool addDog(HashMap* dogHash, avlTree* dogTree)
-{	/*JAMES I've coded this to simply assemble a dog object from inputted data, but where this dog object goes is pretty important. 
-	Does it get written to 'dog.txt'? Attached to the linked list or hash table? I can do any of those things, we just need to figure out which*/
-	
+{	
 	Dog* newDog = new Dog;
 
 	string newName, newGender, newAge, newBreed, newDescription;
@@ -434,7 +394,6 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 	cin >> dogId;
 	cout << endl;
 
-	//JASON - Get the correct syntax, we do not need a validation function
 	while (!isValidDogId(dogId))
 	{
 		cout << "Invalid input.  Use the format \"DOG###\"\n";
@@ -469,7 +428,7 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 		}
 
 		Dog* updatedDog = new Dog(id, name, age, gender, breed, desc);
-		Dog::keyNumGenerator--;
+		Dog::setKeyNumGenerator(Dog::getKeyNumGenerator() - 1);
 
 		dogHash->put(updatedDog);
 		dogTree->insert(updatedDog);
