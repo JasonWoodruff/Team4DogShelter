@@ -191,6 +191,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 {
 	fstream dogFile;
+	string line;
 
 	dogFile.open(FILENAME, fstream::in);
 	while (!dogFile.eof())
@@ -209,15 +210,19 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		getline(dogFile, tempBreed, ',');
 		getline(dogFile, tempDesc, '\n');
 
-		Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
-		
-		//Populate the Hash Table
-		dogHash->put(dog);
+		//JASON I added this check so the program won't recognize an empty line in the file
+		if (tempId != "")
+		{
+			Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
 
-		//Populate the AVL Tree
-		dogTree->insert(dog);
+			//Populate the Hash Table
+			dogHash->put(dog);
 
-		cout << "KeyNumGenerator: " << Dog::keyNumGenerator << endl;
+			//Populate the AVL Tree
+			dogTree->insert(dog);
+
+			cout << "KeyNumGenerator: " << Dog::keyNumGenerator << endl;
+		}
 	}
 	dogFile.close();
 	return true;
@@ -227,49 +232,60 @@ bool updateDogFile(HashMap* dogHash)
 {
 	ofstream out;
 	char choice;
-	
+
 	// will update dogs here
 	choice = yesNoInput("\nWould you like to save changes to the file? (Y/N) -> ");
-	
+
 	if (choice == 'Y')
 	{
 		out.open(FILENAME.c_str());
 		
-		for (int i = 0; i <= 31; i++)
-		{
-			Dog* aDog;
-			string id = to_string(i);
-			string nextID = to_string(i + 1);
-			if (i < 10){
-				id = "DOG00" + id;
-				if (i < 9)
-					nextID = "DOG00" + nextID;
-				else
-					nextID = "DOG0" + nextID;
-			}
-			else if (i < 100)
-			{
-				id = "DOG0" + id;
-				if (i < 99)
-					nextID = "DOG0" + nextID;
-				else
-					nextID = "DOG" + nextID;
-			}
-			else
-				id = "DOG" + id;
-			aDog = dogHash->get(id);
-			if (aDog != nullptr)
-				out << *aDog;
-			if (dogHash->get(nextID) != nullptr)//make sure not to print a endl
-				// at the end, because that will cause an error when reading in
-				out << endl;
-		}
+		dogHash->writeToFile(out);
+		
 		if (out.good())
 			cout << "File succesfully saved" << endl;
 		out.close();
 	}
 	else
 		cout << "File not changed." << endl;
+
+		/*
+		JASON - I am leaving Bryson's old code here in case we need it later.  I don't think we should be generating ID's like this 
+		because we want to get the IDs from the Hash Table instead.  I moved the majority of this function into HashMap.h.
+		This version does create a trailing newline because I'm not sure how to determine the last item in the Hash Table, 
+		so I changed the file read function to ignore emtpy lines.
+		*/
+
+		//for (int i = 0; i <= TABLE_SIZE; i++)
+		//{
+		//	Dog* aDog;
+		//	string id = to_string(i);
+		//	string nextID = to_string(i + 1);
+		//	if (i < 10){
+		//		id = "DOG00" + id;
+		//		if (i < 9)
+		//			nextID = "DOG00" + nextID;
+		//		else
+		//			nextID = "DOG0" + nextID;
+		//	}
+		//	else if (i < 100)
+		//	{
+		//		id = "DOG0" + id;
+		//		if (i < 99)
+		//			nextID = "DOG0" + nextID;
+		//		else
+		//			nextID = "DOG" + nextID;
+		//	}
+		//	else
+		//		id = "DOG" + id;
+		//	aDog = dogHash->get(id);
+		//	if (aDog != nullptr)
+		//		out << *aDog;
+		//	if (dogHash->get(nextID) != nullptr)//make sure not to print a endl
+		//		// at the end, because that will cause an error when reading in
+		//		out << endl;
+		//}
+	
 	
 	return true;
 }
