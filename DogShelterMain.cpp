@@ -24,21 +24,22 @@ Kevin Chen		-	Binary Search Tree
 #include "DogTree.h"
 using namespace std;
 
+//File Operations
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree);
-bool updateDogFile(HashMap* dogHash);			//probably want to change this later to take arguments
+bool updateDogFile(HashMap* dogHash);							
 char yesNoInput(string prompt);
 
-bool mainMenu();					//display the main menu
+//Main Menu and Options
+bool mainMenu();														
 int getMainMenuChoice();
 bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree);
 
-bool addDog(HashMap* dogHash, avlTree* dogTree);						//add a dog to the tree and hash
-bool removeDog(HashMap* dogHash, avlTree* dogTree);					//delete a dog from the tree and hash
-bool displayDogInfoByIdSearch(HashMap* dogHash);	//displays all of a dog's info if it's found with an id search
+//Dog Options (Add/Remove/Display)
+bool addDog(HashMap* dogHash, avlTree* dogTree);						
+bool removeDog(HashMap* dogHash, avlTree* dogTree);					
+bool displayDogInfoByIdSearch(HashMap* dogHash);						
 
-bool displayEfficiencyReport();		//print an efficiency report
-
-//Team Choice 1
+//Update Dog (Team Choice 1)
 bool updateDog(HashMap* dogHash, avlTree* dogTree);
 bool updateDogMenu();
 int getUpdateDogMenuChoice();
@@ -47,21 +48,13 @@ bool updateName(string& name);
 bool updateAge(string& age);
 bool updateDesc(string& desc);
 
-//This function will search the tree for the dog by id.
-//If the dog is found, call updateDogMenu to work on it.
-//Then, keep looping until the user is done updating.
-//If the dog isn't found, display an error message.
+//Efficiency Report
+bool displayEfficiencyReport();										
 
+//Dog Id Validation
 bool isValidDogId(string dogId);
 
-/*Team Choice 2	-	Note:	This section may be tricky because we'll have to create many different trees.
-I suggest we start with Team Choice 1 and do this if we have time.*/
-bool SearchDogMenu();
-bool searchDogByName();
-bool searchDogByGender();
-bool searchDogByAge();
-bool searchDogByBreed();
-
+//Filename
 const string FILENAME = "dog.txt";
 
 int main()
@@ -216,16 +209,14 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		//JASON I added this check so the program won't recognize an empty line in the file
 		if (tempId != "")
 		{
-		Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
+			Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
 		
-		//Populate the Hash Table
-		dogHash->put(dog);
+			//Populate the Hash Table
+			dogHash->put(dog);
 
-		//Populate the AVL Tree
-		dogTree->insert(dog);
-
-		cout << "KeyNumGenerator: " << Dog::keyNumGenerator << endl;
-	}
+			//Populate the AVL Tree
+			dogTree->insert(dog);
+		}
 	}
 	dogFile.close();
 	return true;
@@ -237,7 +228,7 @@ bool updateDogFile(HashMap* dogHash)
 	char choice;
 
 	// will update dogs here
-	choice = yesNoInput("\nWould you like to save changes to the file? (Y/N) -> ");
+	choice = yesNoInput("Would you like to save changes to the file? (Y/N) -> ");
 
 	if (choice == 'Y')
 	{
@@ -388,6 +379,8 @@ bool removeDog(HashMap* dogHash, avlTree* dogTree)
 		cout << "Enter the ID here: ";
 		cin >> dogId;
 	}
+
+	cout << endl;
 
 	dogHash->remove(dogId);
 	dogTree->deleteNode(dogId);
