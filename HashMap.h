@@ -104,18 +104,35 @@ public:
 		{
 			if (table[i] != nullptr)
 			{
-				//First increment here, found an index with a Dog in it
 				LinkedHashEntry *entry = table[i];
 				cout << entry->getValue()->toString() << endl;;
 				while (entry->getNext() != nullptr)
 				{
-					//Increment again
 					entry = entry->getNext();
 					cout << entry->getValue()->toString() << endl;
 				}
 			}
-			//Final value of counter
 		}
+	}
+
+	//Modification of Bryson's code
+	bool writeToFile(ofstream& out)
+	{
+		for (int i = 0; i < TABLE_SIZE; i++)
+		{
+			if (table[i] != nullptr)
+			{
+				LinkedHashEntry *entry = table[i];
+				out << *entry->getValue() << "\n";
+		
+				while (entry->getNext() != nullptr)
+				{
+					entry = entry->getNext();
+					out << *entry->getValue() << "\n";
+				}
+			}
+		}
+		return true;
 	}
 
 	void clear()
