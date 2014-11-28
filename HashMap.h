@@ -8,14 +8,10 @@
 
 using namespace std;
 
-//this header file doesn't compile, don't include quite yet
-
-const int TABLE_SIZE = 31; //modified
-int getLast3Digits(string dogId); /*JASON This function converts the last 3 characters of a string into an integer*/
-
 class HashMap
 {
 private:
+	const int TABLE_SIZE = 31; //modified
 	LinkedHashEntry **table;
 
 public:
@@ -30,7 +26,7 @@ public:
 	{
 		clear();
 	}
-	
+
 	/*JASON The user would type something like "DOG003" which would get passed to get*/
 	Dog *get(string key)
 	{
@@ -54,7 +50,7 @@ public:
 	{
 		int hash = (getLast3Digits(dog->getID()) % TABLE_SIZE); /*JASON another conversion to get int hash*/
 		if (table[hash] == nullptr)	/*JASON if this element is empty, put the Dog here*/
-			table[hash] = new LinkedHashEntry(dog);	
+			table[hash] = new LinkedHashEntry(dog);
 		else
 		{
 			LinkedHashEntry *entry = table[hash];
@@ -124,7 +120,7 @@ public:
 			{
 				LinkedHashEntry *entry = table[i];
 				out << *entry->getValue() << "\n";
-		
+
 				while (entry->getNext() != nullptr)
 				{
 					entry = entry->getNext();
@@ -153,13 +149,14 @@ public:
 		}
 		delete[] table;
 	}
-};
 
-int getLast3Digits(string dogId)
-{
-	string last3Str = dogId.substr(dogId.length() - 3, 3);
-	int last3Num = atoi(last3Str.c_str());
-	return last3Num;
-}
+	int getLast3Digits(string dogId)
+	{
+		string last3Str = dogId.substr(dogId.length() - 3, 3);
+		int last3Num = atoi(last3Str.c_str());
+		return last3Num;
+	}
+
+};
 
 #endif
