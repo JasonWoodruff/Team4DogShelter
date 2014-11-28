@@ -150,11 +150,15 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		case 5:
 		{
 			dogHash->display();
+			cout << "Scroll up to view all entries." << endl;
+			system("pause");
 			break;
 		}
 		case 6:
 		{
 			dogTree->inorder();
+			cout << "Scroll up to view all entries." << endl;
+			system("pause");
 			break;
 		}
 		case 7:
@@ -268,6 +272,7 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 
 	string newName, newGender, newAge, newBreed, newDescription;
 	char yn='x'; //for finalizing 
+	system("CLS");
 	cout << "Please enter the dog's name." << endl;
 	cin.ignore();
 	getline(cin, newName); newName[0] = toupper(newName[0]);          //capitalizes first letter to homogenize data
@@ -279,12 +284,16 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 		if (newGender != "Male" && newGender != "Female"){ cout << "Only the inputs 'Male' and 'Female' are acceptable." << endl; system("pause"); }
 	}
 
-	cout << "\nEnter a qualitative estimate of the dog's age (ie 'Puppy', 'Young', 'Older')." << endl;
-	cin.ignore();
-	getline(cin, newAge); newAge[0] = toupper(newAge[0]);			   
+	while (newAge != "Young" && newAge != "Puppy" && newAge != "Adult" && newAge != "Older" && newAge != "Senior")
+	{
+		cout << "\nEnter a qualitative estimate of the dog's age." << endl;
+		cout << "The only acceptable inputs are 'Puppy', 'Young', 'Adult', 'Older' or 'Senior'." << endl;
+		cin >> newAge; newAge[0] = toupper(newAge[0]);
+	}
 
 
 	cout << "\nEnter the dog's breed (ie 'Beagle' or 'Scottish Terrier')." << endl;
+	cin.ignore();
 	getline(cin, newBreed);	newBreed[0] = toupper(newBreed[0]);
 
 
@@ -317,11 +326,12 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 		newDog->setDescription(newDescription);
 		/*Obviously this ultimately does nothing. But we can assign this dog pointer to anything once I know where addDog()
 		actually assigns a dog to*/
+		dogHash->put(newDog);
+		dogTree->insert(newDog);
 		cout << "Dog finalized. Returning to main menu..." << endl;
 		system("pause"); system("CLS");
 	}
-	dogHash->put(newDog);
-	dogTree->insert(newDog);
+	
 
 	return true;
 }
