@@ -14,5 +14,6 @@ Jason - Menu functions and user input validation
 Stacy - Dog.h and Dog.cpp
 Bryson - File I/O, including the File I/O function inside of HashMap.h.
 Kevin - Tree.h and Tree.cpp
-James - HashMap.h and HashMap.cpp.  Please also do the addDog() and displayEfficiencyReport() functions you wrote too.
+James - HashMap.h and HashMap.cpp.  
+        Please also do the addDog() and displayEfficiencyReport() functions you wrote too.
 ```
