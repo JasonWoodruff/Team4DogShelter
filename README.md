@@ -1,6 +1,6 @@
 Team4DogShelter
 ===============
-Documenation should look like the following for each function
+Documentation should look like the following for each function
 ```javascript
 /*
 @pre    - what the function expects to receive (data)
