@@ -40,7 +40,7 @@ bool addDog(HashMap* dogHash, avlTree* dogTree);
 bool removeDog(HashMap* dogHash, avlTree* dogTree);					
 bool displayDogInfoByIdSearch(HashMap* dogHash);						
 
-//Update Dog (Team Choice 1)
+//Update Dog (Team Choice)
 bool updateDog(HashMap* dogHash, avlTree* dogTree);
 bool updateDogMenu();
 int getUpdateDogMenuChoice();
@@ -50,29 +50,33 @@ bool updateAge(string& age);
 bool updateDesc(string& desc);
 
 //Efficiency Report
-bool displayEfficiencyReport();										
+bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree);
 
-//Dog Id Validation
+//Dog ID Validation
 bool isValidDogId(string dogId);
 
 //Filename
 const string FILENAME = "dog.txt";
 
+/*	
+	main loads the database into data structures (Hash and Tree) then processes menu choices until the user decides to exit
+*/
 int main()
 {
 	int choice = 0;
 	
-	avlTree* dogTree = new avlTree();
 	HashMap* dogHash = new HashMap();
+	avlTree* dogTree = new avlTree();
 	readDogsFromFile(dogHash, dogTree);
 
+	//display the menu and process choices until the user quits (chooses option 10)
 	while (choice != 10)
 	{
-		//Database was cleared, must recreate the data structures
+		//data structures were deleted, must recreate the data structures
 		if (choice == 9)
 		{
-			dogTree = new avlTree();
 			dogHash = new HashMap();
+			dogTree = new avlTree();
 		}
 
 		mainMenu();
@@ -80,13 +84,16 @@ int main()
 		processMainMenuChoice(choice, dogHash, dogTree);
 	}
 
-	delete dogTree;
 	delete dogHash;
+	delete dogTree;
 	
 	system("pause");
 	return 0;
 }
 
+/*
+	mainMenu displays a menu of options
+*/
 bool mainMenu()
 {
 	cout << "-----------------Main Menu-----------------" << endl << endl;
@@ -105,6 +112,10 @@ bool mainMenu()
 	return true;
 }
 
+/*
+	getMainMenuChoice gets a valid menu choice from the user and returns it
+	@return	-	choice is a valid menu choice (integer between 1 and 10)
+*/
 int getMainMenuChoice()
 {
 	string input;
@@ -123,6 +134,13 @@ int getMainMenuChoice()
 	return choice;
 }
 
+/*
+	processMainMenuChoice handles each menu option
+	@pre	-	choice is an integer between 1 and 10
+	@param	-	choice is the menu choice, an integer between 1 and 10
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
+*/
 bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 {
 	switch (choice)
@@ -152,6 +170,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 			dogHash->display();
 			cout << "Scroll up to view all entries." << endl;
 			system("pause");
+			cout << endl;
 			break;
 		}
 		case 6:
@@ -159,6 +178,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 			dogTree->inorder();
 			cout << "Scroll up to view all entries." << endl;
 			system("pause");
+			cout << endl;
 			break;
 		}
 		case 7:
@@ -169,7 +189,7 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 		}
 		case 8:
 		{
-			displayEfficiencyReport();
+			displayEfficiencyReport(dogHash, dogTree);
 			break;
 		}
 		case 9:
@@ -188,11 +208,19 @@ bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 	return true;
 }
 
+/*
+	readDogsFromFile reads each line of 'dog.txt', instantiates a Dog object with the line's data, then adds the Dog to the Hash Table and AVL Tree
+	@pre	-	FILENAME (global constant string) is a valid file path
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
+	@post	-	dogHash and dogTree now store the Dogs from 'dog.txt'
+*/
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 {
 	fstream dogFile;
 	string line;
 
+	//open the file
 	dogFile.open(FILENAME, fstream::in);
 	while (!dogFile.eof())
 	{
@@ -210,38 +238,51 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		getline(dogFile, tempBreed, ',');
 		getline(dogFile, tempDesc, '\n');
 
-		//JASON I added this check so the program won't recognize an empty line in the file
+		//the function will not create a Dog if it reads an empty line in the file (empty lines usually occur due to a trailing newline)
 		if (tempId != "")
 		{
+			//instantiate a new Dog object
 			Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
 		
-			//Populate the Hash Table
+			//populate the Hash Table
 			dogHash->put(dog);
 
-			//Populate the AVL Tree
+			//populate the AVL Tree
 			dogTree->insert(dog);
 		}
 	}
+	
+	//close the file
 	dogFile.close();
 	return true;
 }
 
+/*
+	updateDogFile updates 'dog.txt' with the contents of the Hash Table
+	@pre	-	FILENAME (global constant string) is a valid file path
+	@param	-	dogHash is a Hash Table of Dog objects
+	@post	-	'dog.txt' is updated with the Dogs in the Hash Table (if yes) or remains the same (if no)
+*/
 bool updateDogFile(HashMap* dogHash)
 {
 	ofstream out;
 	char choice;
 
-	// will update dogs here
-	choice = yesNoInput("Would you like to save changes to the file? (Y/N) -> ");
+	//user chooses whether to save and exit or exit without saving
+	choice = yesNoInput("Would you like to save changes to the file? (Y/N): ");
 
 	if (choice == 'Y')
 	{
+		//open the file
 		out.open(FILENAME.c_str());
 		
+		//write to the file
 		dogHash->writeToFile(out);
 		
 		if (out.good())
 			cout << "File succesfully saved" << endl;
+		
+		//close the file
 		out.close();
 	}
 	else
@@ -250,6 +291,11 @@ bool updateDogFile(HashMap* dogHash)
 	return true;
 }
 
+/*
+	yesNoInput gets a valid yes/no choice from the user and returns it
+	@param	-	prompt is a message prompt
+	@return	-	choice is a valid yes/no choice ('Y' or 'N')
+*/
 char yesNoInput(string prompt)
 {
 	char choice;
@@ -260,63 +306,73 @@ char yesNoInput(string prompt)
 		choice = toupper(choice);
 		if (choice != 'Y' && choice != 'N')
 		{
-			cout << "Only 'Y' and 'N' are acceptable.  Please enter again-> ";
+			cout << "Only 'Y' and 'N' are acceptable.  Please enter again: ";
 		}
 	} while (choice != 'Y' && choice != 'N');
 	return choice;
 }
 
+/*
+	addDog creates a new Dog and adds it to the Hash Table and AVL Tree or discards it, depending on user input
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
+	@post	-	the new Dog is discarded or added to the Hash Table and AVL Tree
+*/
 bool addDog(HashMap* dogHash, avlTree* dogTree)
 {	
 	Dog* newDog = new Dog;
 
 	string newName, newGender, newAge, newBreed, newDescription;
-	char yn='x'; //for finalizing 
+	char yn='x';	//holds yes/no choice for finalizing
 	system("CLS");
+	
+	//get the name
 	cout << "Please enter the dog's name." << endl;
 	cin.ignore();
 	getline(cin, newName); newName[0] = toupper(newName[0]);          //capitalizes first letter to homogenize data
 	
+	//get the gender
 	while (newGender != "Male" && newGender != "Female")
 	{
 		cout << "\nEnter the dog's gender ('Male' or 'Female')." << endl;
 		cin >> newGender; newGender[0] = toupper(newGender[0]);        //capitalizes the first character to simplify while loop
-		if (newGender != "Male" && newGender != "Female"){ cout << "Only the inputs 'Male' and 'Female' are acceptable." << endl; system("pause"); }
+		if (newGender != "Male" && newGender != "Female"){ cout << "Only the inputs 'Male' or 'Female' are acceptable." << endl; system("pause"); }
 	}
 
-	while (newAge != "Young" && newAge != "Puppy" && newAge != "Adult" && newAge != "Older" && newAge != "Senior")
+	//get the age
+	while (newAge != "Puppy" && newAge != "Young" && newAge != "Adult" && newAge != "Senior")
 	{
 		cout << "\nEnter a qualitative estimate of the dog's age." << endl;
-		cout << "The only acceptable inputs are 'Puppy', 'Young', 'Adult', 'Older' or 'Senior'." << endl;
+		cout << "The only acceptable inputs are 'Puppy', 'Young', 'Adult', or 'Senior'." << endl;
 		cin >> newAge; newAge[0] = toupper(newAge[0]);
 	}
 
-
+	//get the breed
 	cout << "\nEnter the dog's breed (ie 'Beagle' or 'Scottish Terrier')." << endl;
 	cin.ignore();
 	getline(cin, newBreed);	newBreed[0] = toupper(newBreed[0]);
 
-
+	//get the description
 	cout << "\nEnter a brief description of this dog's personality." << endl;
 	getline(cin, newDescription); newDescription[0] = toupper(newDescription[0]);
 
-	system("CLS"); //clears screen for aesthetics
+	//clear screen for aesthetics
+	system("CLS"); 
 
+	//display the new Dog's attributes
 	cout << "Name: " << newName << endl;
 	cout << "Age: " << newAge << endl;
 	cout << "Gender: " << newGender << endl;
 	cout << "Breed: " << newBreed << endl;
 	cout << "Description: " << newDescription << endl;
 	
-	while (yn != 'Y' && yn != 'N')
-	{
-		cout << "Finalize this new dog? (Y/N)" << endl;
-		cin >> yn;
-		yn = toupper(yn);
-		if (yn != 'Y' && yn != 'N'){ cout << "Only the characters 'Y' and 'N' are acceptable." << endl; system("pause");}
-	}
-
+	//get the yes/no input
+	yn = yesNoInput("Finalize this new dog? (Y/N): ");
+	
+	//no was chosen, discard the dog
 	if (yn == 'N'){ cout << "Dog discarded. Returning to main menu..." << endl; system("pause"); system("CLS"); }
+	
+	//yes was chosen, set the new Dog's attributes and add it to the data structures
 	if (yn == 'Y')
 	{ 
 		newDog->setName(newName); 
@@ -324,49 +380,69 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 		newDog->setGender(newGender);
 		newDog->setAge(newAge);
 		newDog->setDescription(newDescription);
-		/*Obviously this ultimately does nothing. But we can assign this dog pointer to anything once I know where addDog()
-		actually assigns a dog to*/
+		
+		//add the Dog to the Hash Table
 		dogHash->put(newDog);
+		
+		//add the Dog to the AVL Tree
 		dogTree->insert(newDog);
+		
 		cout << "Dog finalized. Returning to main menu..." << endl;
 		system("pause"); system("CLS");
 	}
-	
 
 	return true;
 }
- //Be sure to enqueue the deleted Dog's ID into Dog::nextAvailable 
+
+/*
+	removeDog removes a Dog from the data structures if found by ID search
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
+	@post	-	the Dog is removed from the Hash Table and AVL Tree if found
+*/
 bool removeDog(HashMap* dogHash, avlTree* dogTree)
 {
 	string dogId;
+	
+	//get the Dog ID
 	cout << "Enter the ID of the dog to remove.  Use the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
 	cin >> dogId;
+	cout << endl;
 
+	//repeat getting the Dog ID until valid
 	while (!isValidDogId(dogId))
 	{
 		cout << "Invalid input.  Use the format \"DOG###\"\n";
 		cout << "Enter the ID here: ";
 		cin >> dogId;
+		cout << endl;
 	}
 
-	cout << endl;
-
+	//remove the Dog from the Hash Table
 	dogHash->remove(dogId);
+
+	//remove the Dog from the AVL Tree
 	dogTree->deleteNode(dogId);
 
 	return true;
 }
 
+/*
+	displayDogInfoByIdSearch performs a Hash Table search to find a Dog by ID and displays its attributes if found
+	@param	-	dogHash is a Hash Table of Dog objects
+*/
 bool displayDogInfoByIdSearch(HashMap* dogHash)
 {
 	string dogId;
+	
+	//get the Dog ID
 	cout << "Enter the ID of the Dog to search for.  Use the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
 	cin >> dogId;
 	cout << endl;
 
-	//JASON - Get the correct syntax, we do not need a validation function
+	//repeat getting the Dog ID until valid
 	while (!isValidDogId(dogId))
 	{
 		cout << "Invalid input.  Use the format \"DOG###\"\n";
@@ -375,35 +451,60 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 		cout << endl;
 	}
 	
+	//get the Dog from the Hash Table
 	Dog *dog = dogHash->get(dogId);
 
+	//if the Dog was not found, display a 'not found' message
 	if (dog == nullptr)
 		cout << "Dog not found" << endl << endl;
+	//if the Dog was found, display its attributes
 	else
 		cout << dogHash->get(dogId)->toString() << endl;
 
 	return true;
 }
 
-/*
-Load Factor
-Longest Linked List
-Average number of nodes in linked lists 8
+/*	
+	display data structure efficiences including Load Factor, Longest Linked List, and Average Number of Nodes in Linked List
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
 */
-bool displayEfficiencyReport()
+bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree)
 {
+	cout << "Height of AVL Tree: " << dogTree->getHeight() << endl;
+	cout << endl;
 	return true;
 }
 
-//Team Choice 1
+/*
+	TEAM CHOICE
+
+	updateDog searches the Hash Table for a Dog and allows the user to update its attributes if found
+	
+	If found:
+	The original Dog's attributes are saved in strings before the Dog is removed from the Hash Table and AVL Tree
+	The user is given a menu to update the Dog's name, age, and description (by changing the strings)
+	A new Dog is created with the saved attributes (and any changes made to name, age, or description) of the original Dog
+	The new Dog is added to the Hash Table and AVL Tree
+
+	If not found:
+	A 'not found' message is displayed
+
+	@param	-	dogHash is a Hash Table of Dog objects
+	@param	-	dogTree is an AVL Tree of Dog objects
+	@post	-	if found, the Dog is deleted and a new Dog is added to take its place
+*/
 bool updateDog(HashMap *dogHash, avlTree *dogTree)
 {
 	string dogId;
+
+	//get the Dog ID
 	cout << "Enter the ID of the Dog to update.  Use the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
 	cin >> dogId;
 	cout << endl;
 
+	//repeat getting the Dog ID until valid
 	while (!isValidDogId(dogId))
 	{
 		cout << "Invalid input.  Use the format \"DOG###\"\n";
@@ -412,10 +513,13 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 		cout << endl;
 	}
 
+	//get the Dog from the Hash Table
 	Dog *dog = dogHash->get(dogId);
 
+	//if the Dog was not found, display a 'not found' message
 	if (dog == nullptr)
 		cout << "Dog not found" << endl << endl;
+	//if the Dog was found, display  and save its attributes
 	else
 	{
 		cout << dog->toString() << endl;
@@ -426,9 +530,13 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 		string breed = dog->getBreed();
 		string desc = dog->getDescription();
 
+		//remove the Dog from the Hash Table
 		dogHash->remove(dogId);
+
+		//remove the Dog from the AVL Tree
 		dogTree->deleteNode(dogId);
 		
+		//display the menu and process choices until the user quits (chooses option 4)
 		int choice = 0;
 		while (choice != 4)
 		{
@@ -437,16 +545,24 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 			processUpdateDogMenuChoice(choice, id, name, age, gender, breed, desc);
 		}
 
+		//create a new Dog with the saved attributes (and any changes made to name, age, or description)
 		Dog* updatedDog = new Dog(id, name, age, gender, breed, desc);
-		Dog::setKeyNumGenerator(Dog::getKeyNumGenerator() - 1);
 
+		//add the Dog to the Hash Table
 		dogHash->put(updatedDog);
+
+		//add the Dog to the AVL Tree
 		dogTree->insert(updatedDog);
 	}
 
 	return true;
 }
 
+/*
+	TEAM CHOICE
+
+	updateDogMenu displays a menu of options
+*/
 bool updateDogMenu()
 {
 	cout << "-----------------Update Options-----------------" << endl << endl;
@@ -459,6 +575,12 @@ bool updateDogMenu()
 	return true;
 }
 
+/*
+	TEAM CHOICE
+
+	getUpdateDogMenuChoice() gets a valid menu choice from the user and returns it
+	@return	-	choice is a valid menu choice (integer between 1 and 4)
+*/
 int getUpdateDogMenuChoice()
 {
 	string input;
@@ -477,6 +599,18 @@ int getUpdateDogMenuChoice()
 	return choice;
 }
 
+/*
+	TEAM CHOICE
+
+	processUpdateDogMenuChoice handles each menu option
+	@pre	-	choice is an integer between 1 and 4
+	@param	-	id is a reference to the string holding the Dog id
+	@param	-	name is a reference to the string holding the Dog name
+	@param	-	age is a reference to the string holding the Dog age
+	@param	-	gender is a reference to the string holding the Dog gender
+	@param	-	breed is a reference to the string holding the Dog breed
+	@param	-	desc is a reference to the string holding the Dog description
+*/
 bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& age, string& gender, string& breed, string& desc)
 {
 	switch (choice)
@@ -505,16 +639,29 @@ bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& ag
 	return true;
 }
 
+/*
+	TEAM CHOICE
+
+	updateName gets a new name from the user and stores it in name
+	@param	-	name is a reference to the string holding the Dog name
+*/
 bool updateName(string& name)
 {
 	string dogName;
 	cout << "Enter a new name: ";
-	cin >> dogName;
+	cin.ignore();
+	getline(cin, dogName);
 	cout << endl;
 	name = dogName;
 	return true;
 }
 
+/*
+	TEAM CHOICE
+
+	updateAge gets a new age from the user and stores it in age
+	@param	-	age is a reference to the string holding the Dog age
+*/
 bool updateAge(string& age)
 {
 	string dogAge;
@@ -522,7 +669,7 @@ bool updateAge(string& age)
 	cin >> dogAge;
 
 	while (dogAge != "Puppy" && dogAge != "Young" && dogAge != "Adult" && dogAge != "Senior")
-{
+	{
 		cout << "Invalid input.  Age must be \"Puppy\", \"Young\", \"Adult\", or \"Senior\"" << endl;
 		cout << "Enter a new age: ";
 		cin >> dogAge;
@@ -532,6 +679,12 @@ bool updateAge(string& age)
 	return true;
 }
 
+/*
+	TEAM CHOICE
+
+	updateDesc gets a new description from the user and stores it in desc
+	@param	-	desc is a reference to the string holding the Dog description
+*/
 bool updateDesc(string& desc)
 {
 	string dogDesc;
@@ -543,6 +696,11 @@ bool updateDesc(string& desc)
 	return true;
 }
 
+/*
+	isValidDogId return true or false depending on whether a given Dog ID is formatted correctly
+	@param	-	dogId is the Dog ID to be evaluated
+	@return -	isValid is true if the dogId is correctly formatted or false if dogId is incorrectly formatted
+*/
 bool isValidDogId(string dogId)
 {
 	bool isValid = false;
@@ -554,33 +712,6 @@ bool isValidDogId(string dogId)
 	}
 
 	return isValid;
-}
-
-/*Team Choice 2	-	Note:	This section may be tricky because we'll have to create many different trees.
-I suggest we start with Team Choice 1 and do this if we have time.*/
-bool SearchDogMenu()
-{
-	return true;
-}
-
-bool searchDogByName()
-{
-	return true;
-}
-
-bool searchDogByGender()
-{
-	return true;
-}
-
-bool searchDogByAge()
-{
-	return true;
-}
-
-bool searchDogByBreed()
-{
-	return true;
 }
 
 

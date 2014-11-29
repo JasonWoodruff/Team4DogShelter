@@ -49,7 +49,7 @@ public:
 		destroySubTree(root);
 	}
 
-	//for the Efficiency Report
+	//get the height of the tree
 	int getHeight()
 	{
 		return height(root);
@@ -77,9 +77,7 @@ public:
 	void display(int n)
 	{
 		if (root == NULL)
-		{
 			cout << "Tree is Empty" << endl;
-		}
 		else
 		{
 			cout << "Balanced AVL Tree:" << endl;
