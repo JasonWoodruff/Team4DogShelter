@@ -111,8 +111,13 @@ public:
 			}
 		}
 	}
-
-	//Modification of Bryson's code
+	
+	/*
+	@pre    - a file has been succesfully opened using the ofstream
+	@param  - out, a ofstream reference variable referring to a file that has been opened
+	@post   - Using the ofstream, the file has been written to.
+	@return - boolean indicating that the file has been succesfully written to
+	*/
 	bool writeToFile(ofstream& out)
 	{
 		for (int i = 0; i < TABLE_SIZE; i++)
