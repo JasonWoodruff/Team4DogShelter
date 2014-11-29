@@ -151,6 +151,27 @@ public:
 		delete[] table;
 	}
 
+	double getLoadFactor()
+	{
+		double entries = 0;
+
+		for (int i = 0; i < TABLE_SIZE; i++)
+		{
+			if (table[i] != nullptr)
+			{
+				LinkedHashEntry *entry = table[i];
+
+				while (entry != nullptr)
+				{
+					entries++;
+					entry = entry->getNext();
+				}
+			}
+		}
+		double loadFactor = entries / TABLE_SIZE;
+		return loadFactor;
+	}
+
 	int getLast3Digits(string dogId)
 	{
 		string last3Str = dogId.substr(dogId.length() - 3, 3);

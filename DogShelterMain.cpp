@@ -471,8 +471,10 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 */
 bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree)
 {
-	cout << "Height of AVL Tree: " << dogTree->getHeight() << endl;
+	cout << "Load Factor:\t\t" << dogHash->getLoadFactor() << endl;
+	cout << "Height of AVL Tree:\t" << dogTree->getHeight() << endl;
 	cout << endl;
+	
 	return true;
 }
 
