@@ -113,10 +113,11 @@ public:
 	}
 	
 	/*
-	@pre    - a file has been succesfully opened using the ofstream
-	@param  - out, a ofstream reference variable referring to a file that has been opened
-	@post   - Using the ofstream, the file has been written to.
-	@return - boolean indicating that the file has been succesfully written to
+		This function writes the dogs in the hash table to the file.
+		@pre    - a file has been succesfully opened using the ofstream
+		@param  - out, a ofstream reference variable referring to a file that has been opened
+		@post   - Using the ofstream, the file has been written to.
+		@return - boolean indicating that the file has been succesfully written to
 	*/
 	bool writeToFile(ofstream& out)
 	{
