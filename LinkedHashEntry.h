@@ -2,27 +2,18 @@
 #define LINKED_HASH_ENTRY
 #include "Dog.h"
 
-/*JASON I got the Hash Table working and reading from the file properly.  Play around with options 2 and 7 in the menu because they now work as intended.  
-We will continue to work with add/delete and the other Hash/Tree functions once we have the Tree.  
-
-James - I apologize for taking over your part, but since this is our last week, we need to have this working ASAP.  
-For now, I want you to focus on understanding the code, and please ask any questions about it.
-Once you have it down, let us know, because we'll need your help on the rest of the project, especially the presentation.
-*/
-
 class LinkedHashEntry
 {
 private:
-	string key; //this will be a string with the dog id (ex. "DOG002")
-	/*JAMES: I left in the above string because I wasn't sure if it was needed. hashVal is the actual assigned hash value
-	assigned to each dog node. It's derived from the Dog objects ID number (ie string "DOG002" has a hash value of '02'
-	as an int. I don't know if this string belongs, but I'll leave it there until I know for sure.
-	JASON: The string is needed because the conversion to digits is only needed to determine the placement of the Dog in the Hash Table.  
-	The key and value must retain their original values when they are put in the Table so additional entries and searches can compare against them.*/
-	Dog *value; //the Dog object associated with the dog id
-	LinkedHashEntry *next;
+	string key;				//Dog ID
+	Dog* value;				//pointer to a Dog object
+	LinkedHashEntry *next;	//pointer to the next entry
 
 public:
+	/*
+		LinkedHashEntry constructor sets the value with a pointer to a Dog, sets the key with the ID of the pointer to a Dog, and sets next to null
+		@param	-	entry is a pointer to a Dog
+	*/
 	LinkedHashEntry(Dog *entry)
 	{
 		this->key = entry->getID();
@@ -30,26 +21,46 @@ public:
 		this->next = nullptr;
 	}
 
+	/*
+		get the key
+		@return key
+	*/
 	string getKey()
 	{
 		return key;
 	}
 
+	/*
+		get the value
+		@return value
+	*/
 	Dog *getValue()
 	{
 		return value;
 	}
 
+	/*
+		set the value
+		@param	-	value is a pointer to a Dog
+	*/
 	void setValue(Dog *value)
 	{
 		this->value = value;
 	}
 
-	LinkedHashEntry *getNext()
+	/*
+		get next (the pointer the LinkedHashEntry points to)
+		@return	-	next
+	*/
+	LinkedHashEntry* getNext()
 	{
 		return next;
 	}
 
+	/*
+		set next (the pointer the LinkedHashEntry points to)
+		@param	-	next is a pointer to a LinkedHashEntry
+	*/
 	void setNext(LinkedHashEntry *next)
 	{
 		this->next = next;

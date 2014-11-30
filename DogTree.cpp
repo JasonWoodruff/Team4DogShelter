@@ -143,8 +143,7 @@ avl_node *avlTree::deleteNode(avl_node* root, string dogId, bool *ptr_removed)
 	else if (dogId > root->data->getID())
 		root->right = deleteNode(root->right, dogId, ptr_removed);
 
-	// if key is same as root's key, then This is the node
-	// to be deleted
+	// if key is same as root's key, then this is the node to be deleted
 	else
 	{
 		// node with only one child or no child
