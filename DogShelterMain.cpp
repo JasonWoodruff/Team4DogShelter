@@ -633,7 +633,7 @@ bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& ag
 			break;
 		}
 		case 4:
-{
+		{
 			cout << "Returning to Main Menu..." << endl << endl;
 			break;
 		}

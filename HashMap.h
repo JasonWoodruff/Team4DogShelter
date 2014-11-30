@@ -5,186 +5,86 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <fstream>
 
 using namespace std;
 
+/*
+	HashMap code adapted from the following source:
+	http://www.algolist.net/Data_structures/Hash_table/Chaining
+*/
 class HashMap
 {
 private:
-	const int TABLE_SIZE = 31; //modified
-	LinkedHashEntry **table;
+	const int TABLE_SIZE = 31;	//TABLE_SIZE is a prime number
+	LinkedHashEntry **table;	//table is an array of pointers
 
 public:
-	HashMap()
-	{
-		table = new LinkedHashEntry*[TABLE_SIZE];
-		for (int i = 0; i < TABLE_SIZE; i++)
-			table[i] = nullptr;
-	}
+	/*
+		HashMap constructor initializes table as a new array of LinkedHashEntry of size TABLE_SIZE, then assigns each index to null
+	*/
+	HashMap();
 
-	~HashMap()
-	{
-		Dog::setKeyNumGenerator(1);
-		clear();
-	}
+	/*
+		~HashMap destructor resets the keyNumGenerator to 1 then calls clear() to destroy the Hash Table
+	*/
+	~HashMap();
 
-	/*JASON The user would type something like "DOG003" which would get passed to get*/
-	Dog *get(string key)
-	{
-		int hash = (getLast3Digits(key) % TABLE_SIZE); /*JASON note how the conversion happens here.  We don't want to change the key itself because it's needed for comparisons with other Dogs in the table later.  Only int hash changes.*/
-		if (table[hash] == nullptr)
-			return nullptr;
-		else
-		{
-			LinkedHashEntry *entry = table[hash];
-			while (entry != nullptr && entry->getKey() != key) /*JASON This is one of the comparisons I mentioned.*/
-				entry = entry->getNext();
-			if (entry == nullptr)
-				return nullptr;
-			else
-				return entry->getValue();
-		}
-	}
+	/*
+		get searches the Hash Table for a Dog with the same id as key, then returns a pointer to that Dog or null if not found
+		@pre	-	a properly formatted key string (DOG###)
+		@param	-	key is the ID of the Dog to search for
+		@return	-	a pointer to the Dog or null if not found
+	*/
+	Dog* get(string key);
 
-	/*JASON We will pass a dog to this function.  This happens repeatedly when we read in the file.*/
-	void put(Dog *dog)
-	{
-		int hash = (getLast3Digits(dog->getID()) % TABLE_SIZE); /*JASON another conversion to get int hash*/
-		if (table[hash] == nullptr)	/*JASON if this element is empty, put the Dog here*/
-			table[hash] = new LinkedHashEntry(dog);
-		else
-		{
-			LinkedHashEntry *entry = table[hash];
-			while (entry->getNext() != nullptr) /*JASON if the element was occupied, walk the linked list until you find get to null, then put the Dog there*/
-				entry = entry->getNext();
-			if (entry->getKey() == dog->getID()) /*If the same key already exists in the hash table, overwrite its value with the value of the Dog we're passing in.  Note:  Keys must be unique, but as long as we do the ID's correctly this should never occur.*/
-				entry->setValue(dog);
-			else
-				entry->setNext(new LinkedHashEntry(dog)); /*JASON got to null, put the Dog here*/
-		}
-	}
+	/*
+		put adds a Dog pointer to the Hash Table
+		@param	-	dog is the Dog pointer to be added
+		@post	-	dog is placed in its proper position in the Hash Table
+	*/
+	void put(Dog* dog);
 
-	void remove(string key)
-	{
-		int hash = (getLast3Digits(key) % TABLE_SIZE); /*JASON another conversion*/
-		if (table[hash] != nullptr)
-		{
-			LinkedHashEntry *prevEntry = nullptr;
-			LinkedHashEntry *entry = table[hash];
-			while (entry->getNext() != nullptr && entry->getKey() != key)
-			{
-				prevEntry = entry;
-				entry = entry->getNext();
-			}
-			if (entry->getKey() == key)
-			{
-				if (prevEntry == nullptr)
-				{
-					LinkedHashEntry *nextEntry = entry->getNext();
-					delete entry;
-					table[hash] = nextEntry;
-				}
-				else
-				{
-					LinkedHashEntry *next = entry->getNext();
-					delete entry;
-					prevEntry->setNext(next);
-				}
-			}
-		}
-	}
+	/*
+		remove searches the Hash Table for a Dog with the same id as key, then removes that Dog's pointer from the Hash Table if found
+		@pre	-	a properly formatted key string (DOG###)
+		@param	-	key is the ID of the Dog to remove
+		@post	-	the Dog pointer is removed from the Hash Table
+	*/
+	void remove(string key);
 
-	//Used by displayInHashSequence() function
-	void display()
-	{
-		for (int i = 0; i < TABLE_SIZE; i++)
-		{
-			if (table[i] != nullptr)
-			{
-				LinkedHashEntry *entry = table[i];
-				cout << entry->getValue()->toString() << endl;;
-				while (entry->getNext() != nullptr)
-				{
-					entry = entry->getNext();
-					cout << entry->getValue()->toString() << endl;
-				}
-			}
-		}
-	}
+	/*
+		display displays the attributes of each Dog in the Hash Table by iterating through each table element and each element's linked chain
+	*/
+	void display();
 	
 	/*
-		This function writes the dogs in the hash table to the file.
-		@pre    - a file has been succesfully opened using the ofstream
-		@param  - out, an ofstream reference variable referring to a file that has been opened
-		@post   - Using the ofstream, the file has been written to.
-		@return - boolean indicating that the file has been succesfully written to
+		writeToFile writes the dogs in the hash table to the file.
+		@pre    -	a file has been succesfully opened using the ofstream
+		@param  -	out, an ofstream reference variable referring to a file that has been opened
+		@post   -	Using the ofstream, the file has been written to.
+		@return -	boolean indicating that the file has been succesfully written to
 	*/
-	bool writeToFile(ofstream& out)
-	{
-		for (int i = 0; i < TABLE_SIZE; i++)
-		{
-			if (table[i] != nullptr)
-			{
-				LinkedHashEntry *entry = table[i];
-				out << *entry->getValue() << "\n";
+	bool HashMap::writeToFile(ofstream& out);
+	
+	/*
+		clear deletes all the entries in the Hash Table and deletes table
+		@post	-	the Hash Table is deleted
+	*/
+	void clear();
 
-				while (entry->getNext() != nullptr)
-				{
-					entry = entry->getNext();
-					out << *entry->getValue() << "\n";
-				}
-			}
-		}
-		return true;
-	}
+	/*
+		getLoadFactor calculates and returns the load factor of the Hash Table
+		@return	-	loadFactor is the load factor of the Hash Table
+	*/
+	double getLoadFactor();
 
-	void clear()
-	{
-		for (int i = 0; i < TABLE_SIZE; i++)
-		{
-			if (table[i] != nullptr)
-			{
-				LinkedHashEntry *prevEntry = nullptr;
-				LinkedHashEntry *entry = table[i];
-				while (entry != nullptr)
-				{
-					prevEntry = entry;
-					entry = entry->getNext();
-					delete prevEntry;
-				}
-			}
-		}
-		delete[] table;
-	}
-
-	double getLoadFactor()
-	{
-		double entries = 0;
-
-		for (int i = 0; i < TABLE_SIZE; i++)
-		{
-			if (table[i] != nullptr)
-			{
-				LinkedHashEntry *entry = table[i];
-
-				while (entry != nullptr)
-				{
-					entries++;
-					entry = entry->getNext();
-				}
-			}
-		}
-		double loadFactor = entries / TABLE_SIZE;
-		return loadFactor;
-	}
-
-	int getLast3Digits(string dogId)
-	{
-		string last3Str = dogId.substr(dogId.length() - 3, 3);
-		int last3Num = atoi(last3Str.c_str());
-		return last3Num;
-	}
-
+	/*
+		getLast3Digits gets the last 3 digits of a dogId for hashing calculations
+		@pre	-	dogId is a valid Dog ID (DOG###)
+		@return	-	last3Num is the last 3 digits of dogId
+	*/
+	int getLast3Digits(string dogId);
 };
 
 #endif

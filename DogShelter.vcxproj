@@ -67,6 +67,7 @@
     <ClCompile Include="Dog.cpp" />
     <ClCompile Include="DogShelterMain.cpp" />
     <ClCompile Include="DogTree.cpp" />
+    <ClCompile Include="HashMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dog.h" />

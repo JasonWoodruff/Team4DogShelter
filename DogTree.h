@@ -13,6 +13,11 @@ struct avl_node
 	struct avl_node *right;
 };
 
+/*
+	AVL Tree code adapted from the following sources:
+	http://www.sanfoundry.com/cpp-program-implement-avl-trees/
+	http://www.geeksforgeeks.org/avl-tree-set-2-deletion/
+*/
 class avlTree
 {
 private:
