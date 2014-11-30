@@ -1,5 +1,8 @@
 #include "HashMap.h"
 
+/*
+Initialize the Hash Table
+*/
 HashMap::HashMap()
 {
 	table = new LinkedHashEntry*[TABLE_SIZE];
@@ -7,12 +10,18 @@ HashMap::HashMap()
 		table[i] = nullptr;
 }
 
+/*
+Reset the KeyNumGenerator and Delete the Hash Table
+*/
 HashMap::~HashMap()
 {
 	Dog::setKeyNumGenerator(1);
 	clear();
 }
 
+/*
+Get a Dog from the Hash Table
+*/
 Dog* HashMap::get(string key)
 {
 	int hash = (getLast3Digits(key) % TABLE_SIZE);
@@ -30,6 +39,9 @@ Dog* HashMap::get(string key)
 	}
 }
 
+/*
+Add a Dog to the Hash Table
+*/
 void HashMap::put(Dog *dog)
 {
 	int hash = (getLast3Digits(dog->getID()) % TABLE_SIZE);
@@ -47,6 +59,9 @@ void HashMap::put(Dog *dog)
 	}
 }
 
+/*
+Remove a Dog from the Hash Table
+*/
 void HashMap::remove(string key)
 {
 	int hash = (getLast3Digits(key) % TABLE_SIZE);
@@ -77,6 +92,9 @@ void HashMap::remove(string key)
 	}
 }
 
+/*
+Display all the Dogs in the Hash Table
+*/
 void HashMap::display()
 {
 	for (int i = 0; i < TABLE_SIZE; i++)
@@ -94,6 +112,9 @@ void HashMap::display()
 	}
 }
 
+/*
+Write the contents of the Hash Table to 'dog.txt'
+*/
 bool HashMap::writeToFile(ofstream& out)
 {
 	for (int i = 0; i < TABLE_SIZE; i++)
@@ -113,6 +134,9 @@ bool HashMap::writeToFile(ofstream& out)
 	return true;
 }
 
+/*
+Delete the contents of the Hash Table
+*/
 void HashMap::clear()
 {
 	for (int i = 0; i < TABLE_SIZE; i++)
@@ -132,27 +156,61 @@ void HashMap::clear()
 	delete[] table;
 }
 
-double HashMap::getLoadFactor()
+/*
+Get the efficiency of the Hash Table
+*/
+double HashMap::getEfficiency(int& longestList, double& linksPerElement)
 {
+	//number of entries
 	double entries = 0;
+
+	//stores the number of links in an occupied element
+	int mostLinks = 0;
+
+	//stores the total number of links in the Hash Table
+	int links = 0;
+
+	//stores the total number of occupied elements in the Hash Table
+	int elements = 0;
+
+	//stores the longest list in the Hash Table (most collisions)
+	longestList = 0;
+
+	//stores the average number of links per occupied element
+	linksPerElement = 0;
 
 	for (int i = 0; i < TABLE_SIZE; i++)
 	{
+		mostLinks = 0;
+		
 		if (table[i] != nullptr)
 		{
+			elements++;
 			LinkedHashEntry *entry = table[i];
 
 			while (entry != nullptr)
 			{
+				links++;
+				mostLinks++;
 				entries++;
+
+				if (mostLinks > longestList)
+					longestList = mostLinks;
+
 				entry = entry->getNext();
 			}
 		}
 	}
+	
+	linksPerElement = links / elements;
+	
 	double loadFactor = entries / TABLE_SIZE;
 	return loadFactor;
 }
 
+/*
+Get the Last 3 Digits of a Dog ID
+*/
 int HashMap::getLast3Digits(string dogId)
 {
 	string last3Str = dogId.substr(dogId.length() - 3, 3);

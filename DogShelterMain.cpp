@@ -471,8 +471,16 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 */
 bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree)
 {
-	cout << "Load Factor:\t\t" << dogHash->getLoadFactor() << endl;
-	cout << "Height of AVL Tree:\t" << dogTree->getHeight() << endl;
+	//stores the Longest Linked List
+	int longestList = 0;
+
+	//stores the Average Number of Nodes in Linked List
+	double linksPerElement = 0;
+
+	cout << "Load Factor:\t\t\t\t\t" << dogHash->getEfficiency(longestList, linksPerElement) << endl;
+	cout << "Longest Linked List:\t\t\t\t" << longestList << endl;
+	cout << "Average Number of Nodes in Linked List:\t\t" << linksPerElement << endl;
+	cout << "Height of AVL Tree:\t\t\t\t" << dogTree->getHeight() << endl;
 	cout << endl;
 	
 	return true;

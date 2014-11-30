@@ -74,10 +74,12 @@ public:
 	void clear();
 
 	/*
-		getLoadFactor calculates and returns the load factor of the Hash Table
+		getEfficiency calculates the Load Factor, Longest Linked List, and Average Number of Nodes in Linked List
+		@param	-	longestList is a reference to an int that stores the longest linked list in the Hash Table
+		@param	-	linksPerElement is a reference to a double that stores the average number of links per occupied element in the Hash Table
 		@return	-	loadFactor is the load factor of the Hash Table
 	*/
-	double getLoadFactor();
+	double getEfficiency(int& longestList, double& linksPerElement);
 
 	/*
 		getLast3Digits gets the last 3 digits of a dogId for hashing calculations
