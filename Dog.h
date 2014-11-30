@@ -10,25 +10,39 @@ using namespace std;
 class Dog
 {
 private:   
-	string ID;    //format DOG001, DOG002
+	string ID;			//format DOG###
 	string name;
 	string age;
 	string gender;
 	string breed;
 	string description;
 	
-	static int keyNumGenerator; //counts number of keys generated
-	static queue<string> nextAvailable;
+	static int keyNumGenerator;			//counts number of keys generated
+	static queue<string> nextAvailable;	//stores recycled IDs from deleted Dogs
 	
 protected:
-	//generates a Dog ID based on a static variable which counts the instances of Dogs
+	/*
+		generate a unique Dog ID of the format DOG### if nextAvailable is empty, or get the front of nextAvailable then pop it if it isn't empty
+		@post	-	keyNumGenerator is incremented or nextAvailable is popped
+		@return	-	the Dog ID
+	*/
 	string generateID();
 	
 public:
-	/*Default constructor creates a dogID only*/
+	/*
+		Dog default constructor creates a new Dog and calls generateID()
+	*/
 	Dog();
 	
-	/**Constructor assigns all fields*/
+	/*
+		Dog constructor creates a new Dog, sets all fields and increments keyNumGenerator
+		@param	-	strID is the Dog ID
+		@param	-	strN is the Dog name
+		@param	-	strGen is the Dog gender
+		@param	-	strAge is the Dog age
+		@param	-	strB is the Dog breed
+		@param	-	strD is the Dog description
+	*/
 	Dog(string strID, string strN, string strGen, string strAge, string strB, string strD);
 	
 	/**Accessor methods*/
@@ -40,6 +54,13 @@ public:
 	string getDescription() const;
 
 	static int getKeyNumGenerator();
+
+	/*
+		get the front of the queue then pop it
+		@pre	-	nextAvailable is not empty
+		@post	-	nextAvailable is popped
+		@return	-	front of nextAvailable
+	*/
 	static string getNextAvailable();
 	
 	/**Mutator methods*/
@@ -51,9 +72,19 @@ public:
 	void setDescription(string desc);
 
 	static void setKeyNumGenerator(int key);
+
+	/*
+		push an ID onto the queue
+		@pre	-	id is a correctly formatted Dog ID (DOG###)
+		@param	-	id is the string to push onto the queue containing the Dog ID
+		@post	-	id is pushed onto the queue
+	*/
 	static void setNextAvailable(string id);
 
-	/**Print out the Dog's info*/
+	/*
+		create a string out of the Dog's attributes
+		@return	-	a string with Dog attributes
+	*/
 	string toString();
 	
 	/* Override ostream - for when saving to file*/

@@ -6,14 +6,8 @@ using namespace std;
 
 #include "Dog.h"
 
-int Dog::keyNumGenerator = 1; //increments when each new instance of Dog is created
-queue<string> Dog::nextAvailable;
-
-/*	We could use a data item here called NextAvailable that keeps track of freed up IDs.
-	When Dogs are removed, we want their ids to get used up again ASAP.  NextAvailable
-	could be a chain of linked nodes like a queue.
-	generateID() would need to account for this new data item too - Jason
-*/
+int Dog::keyNumGenerator = 1;		//increments when each new instance of Dog is created, unless the Dog uses a recycled ID from nextAvailable
+queue<string> Dog::nextAvailable;	//stores deleted Dog IDs to be given to new Dogs
 
 Dog::Dog()
 { 
@@ -78,23 +72,25 @@ void Dog::setKeyNumGenerator(int key)
 void Dog::setNextAvailable(string id)
 { nextAvailable.push(id); }
 
-//I made a change to this function so it accounts for available ids that were previously deleted - Jason
+
 string Dog::generateID()
 {
+	//no Dog IDs to recycle, make a new one
 	if (nextAvailable.empty())
 	{
 		int tempID = keyNumGenerator++; //next number available for id assignment
-		string pad = ""; //a cushion of filler 0s
+		string pad = "";				//a cushion of filler 0s
 		stringstream s;
-		if (tempID < 10) //create the filler 0s if needed
+		if (tempID < 10)				//create the filler 0s if needed
 			pad = "00";
 		else if (tempID < 100)
 			pad = "0";
 		else if (tempID < 1000)
 			pad = "";
-		s << "DOG" << pad << tempID; //concatenate all parts of id
+		s << "DOG" << pad << tempID;	//concatenate all parts of id
 		return s.str();
 	}
+	//reuse an old Dog ID from the queue
 	else
 	{
 		string newId = nextAvailable.front();
@@ -103,6 +99,7 @@ string Dog::generateID()
 	}	
 }
 
+/**/
 string Dog::toString()
 {
 	stringstream s;
