@@ -131,11 +131,15 @@ avl_node *avlTree::insert(avl_node *root, Dog *dog)
 		root->left = insert(root->left, dog);
 		root = balance(root);
 	}
-	else if (dog->getID() >= root->data->getID())
+	else if (dog->getID() > root->data->getID())
 	{
 		root->right = insert(root->right, dog);
 		root = balance(root);
 	}
+	//overwrite duplicates
+	else
+		root->data = dog;
+	
 	return root;
 }
 

@@ -1,4 +1,5 @@
 DOG001,Rex,Male,Puppy,English Setter,Playful
+DOG001,DuplicateDog,Male,Puppy,English Setter,This dog overwrote Rex, the other DOG001
 DOG002,Max,Male,Young,Russel Terrier,Lazy
 DOG003,Alice,Female,Puppy,French Bulldog,Shy
 DOG004,Ang,Male,Adult,Cocker Spaniel,Likes the outdoors

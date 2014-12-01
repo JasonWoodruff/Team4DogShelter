@@ -540,12 +540,6 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 		string breed = dog->getBreed();
 		string desc = dog->getDescription();
 
-		//remove the Dog from the Hash Table
-		dogHash->remove(dogId);
-
-		//remove the Dog from the AVL Tree
-		dogTree->deleteNode(dogId);
-		
 		//display the menu and process choices until the user quits (chooses option 4)
 		int choice = 0;
 		while (choice != 4)
@@ -555,14 +549,10 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 			processUpdateDogMenuChoice(choice, id, name, age, gender, breed, desc);
 		}
 
-		//create a new Dog with the saved attributes (and any changes made to name, age, or description)
-		Dog* updatedDog = new Dog(id, name, gender, age, breed, desc);
-
-		//add the Dog to the Hash Table
-		dogHash->put(updatedDog);
-
-		//add the Dog to the AVL Tree
-		dogTree->insert(updatedDog);
+		//update the Dog with any changes made to name, age, or description
+		dog->setName(name);
+		dog->setAge(age);
+		dog->setDescription(desc);
 	}
 
 	return true;
