@@ -20,26 +20,34 @@ ID(strID), name(strN), gender(strGen), age(strAge), breed(strB), description(str
 	keyNumGenerator++;
 }
 
+
 string Dog::getID() const
 { return ID; }
+
 
 string Dog::getName() const
 { return name; }
 
+
 string Dog::getAge() const
 { return age; }
+
 
 string Dog::getGender() const
 { return gender; }
 
+
 string Dog::getBreed() const
 { return breed; }
+
 
 string Dog::getDescription() const
 { return description; }
 
+
 int Dog::getKeyNumGenerator()
 { return keyNumGenerator; }
+
 
 string Dog::getNextAvailable()
 { 
@@ -47,6 +55,7 @@ string Dog::getNextAvailable()
 	nextAvailable.pop();
 	return nextId; 
 }
+
 
 void Dog::setID(string key)
 { ID = key; }
@@ -58,7 +67,7 @@ void Dog::setAge(string a)
 { age = a; }
 
 void Dog::setGender(string a)
-{gender = a;}
+{ gender = a; }
 
 void Dog::setBreed(string type)
 { breed = type; }
@@ -75,23 +84,22 @@ void Dog::setNextAvailable(string id)
 
 string Dog::generateID()
 {
-	//no Dog IDs to recycle, make a new one
-	if (nextAvailable.empty())
+	if (nextAvailable.empty())           //no Dog IDs to recycle, make a new one
 	{
 		int tempID = keyNumGenerator++; //next number available for id assignment
 		string pad = "";				//a cushion of filler 0s
 		stringstream s;
+
 		if (tempID < 10)				//create the filler 0s if needed
 			pad = "00";
 		else if (tempID < 100)
 			pad = "0";
-		else if (tempID < 1000)
-			pad = "";
+
 		s << "DOG" << pad << tempID;	//concatenate all parts of id
 		return s.str();
 	}
-	//reuse an old Dog ID from the queue
-	else
+	
+	else         //reuse an old Dog ID from the queue
 	{
 		string newId = nextAvailable.front();
 		nextAvailable.pop();
@@ -107,7 +115,7 @@ string Dog::toString()
 	return s.str();
 }
 
-ostream& operator<<(ostream& os, const Dog& dt)
+ostream& operator<<(ostream& os, const Dog& dt)             //simplifies outputting to file
 {
 	os << dt.getID() << "," << dt.getName() << "," << dt.getGender() << "," << dt.getAge() << "," << dt.getBreed() << "," << dt.getDescription();
     return os;
