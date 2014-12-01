@@ -167,9 +167,6 @@ double HashMap::getEfficiency(int& longestList, double& linksPerElement)
 	//stores the number of links in an occupied element
 	int mostLinks = 0;
 
-	//stores the total number of links in the Hash Table
-	int links = 0;
-
 	//stores the total number of occupied elements in the Hash Table
 	int elements = 0;
 
@@ -190,7 +187,6 @@ double HashMap::getEfficiency(int& longestList, double& linksPerElement)
 
 			while (entry != nullptr)
 			{
-				links++;
 				mostLinks++;
 				entries++;
 
@@ -202,7 +198,8 @@ double HashMap::getEfficiency(int& longestList, double& linksPerElement)
 		}
 	}
 	
-	linksPerElement = links / elements;
+	if (elements > 0)
+		linksPerElement = entries / elements;
 	
 	double loadFactor = entries / TABLE_SIZE;
 	return loadFactor;

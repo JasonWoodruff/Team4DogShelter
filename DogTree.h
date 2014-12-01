@@ -27,7 +27,7 @@ private:
 		height recursively finds the height of the Tree
 		@return	-	h is the height of the Tree
 	*/
-	int height(avl_node *);
+	int height(avl_node* temp);
 
 	/*
 		diff returns the balance factor between a node's left and right subtrees
@@ -84,7 +84,7 @@ private:
 		@post	-	the pointer is inserted into the Tree and the Tree balances itself
 		@return	-	the new root of the Tree
 	*/
-	avl_node *insert(avl_node* root, Dog* value);	//root, done
+	avl_node *insert(avl_node* root, Dog* dog);	//root, done
 
 	/*
 		search the Tree, starting at root, for a Dog with the same ID as dogId, delete the node from the Tree if found, then balance the Tree

@@ -99,11 +99,11 @@ string Dog::generateID()
 	}	
 }
 
-/**/
+/*Return a string with a Dog's attributes*/
 string Dog::toString()
 {
 	stringstream s;
-	s << ID << "\n" << name << "\n" << age << "\n" << gender << "\n" << breed << "\n" << description << "\n";
+	s << ID << "\n" << name << "\n" << gender << "\n" << age << "\n" << breed << "\n" << description << "\n";
 	return s.str();
 }
 

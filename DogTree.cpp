@@ -99,24 +99,24 @@ avl_node *avlTree::balance(avl_node *temp)
 /*
 Insert Element into the tree
 */
-avl_node *avlTree::insert(avl_node *root, Dog *value)
+avl_node *avlTree::insert(avl_node *root, Dog *dog)
 {
 	if (root == NULL)
 	{
 		root = new avl_node;
-		root->data = value;
+		root->data = dog;
 		root->left = NULL;
 		root->right = NULL;
 		return root;
 	}
-	else if (value->getID() < root->data->getID())
+	else if (dog->getID() < root->data->getID())
 	{
-		root->left = insert(root->left, value);
+		root->left = insert(root->left, dog);
 		root = balance(root);
 	}
-	else if (value->getID() >= root->data->getID())
+	else if (dog->getID() >= root->data->getID())
 	{
-		root->right = insert(root->right, value);
+		root->right = insert(root->right, dog);
 		root = balance(root);
 	}
 	return root;

@@ -1,8 +1,8 @@
 /*
 CIS22C Team 4 Project:	Dog Shelter Management Program
 
-Purpose:	Create an easily accessible and editable catalog of dogs in a shelter
-			and allow the user to search through it based on dog attributes
+Purpose:	The function of our software is to store, organize and
+			manage data about dogs in a shelter.
 
 @author		
 Jason Woodruff	-	Project Coordinator
@@ -12,7 +12,7 @@ James Juchau	-	Hashed Table
 Kevin Chen		-	Binary Search Tree
 
 @version	1.5
-@since		11/25/2014
+@since		11/30/2014
 */
 
 #include <iostream>
@@ -233,8 +233,8 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 
 		getline(dogFile, tempId, ',');
 		getline(dogFile, tempName, ',');
-		getline(dogFile, tempAge, ',');
 		getline(dogFile, tempGender, ',');
+		getline(dogFile, tempAge, ',');
 		getline(dogFile, tempBreed, ',');
 		getline(dogFile, tempDesc, '\n');
 
@@ -242,7 +242,7 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		if (tempId != "")
 		{
 			//instantiate a new Dog object
-			Dog* dog = new Dog(tempId, tempName, tempAge, tempGender, tempBreed, tempDesc);
+			Dog* dog = new Dog(tempId, tempName, tempGender, tempAge, tempBreed, tempDesc);
 		
 			//populate the Hash Table
 			dogHash->put(dog);
@@ -556,7 +556,7 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 		}
 
 		//create a new Dog with the saved attributes (and any changes made to name, age, or description)
-		Dog* updatedDog = new Dog(id, name, age, gender, breed, desc);
+		Dog* updatedDog = new Dog(id, name, gender, age, breed, desc);
 
 		//add the Dog to the Hash Table
 		dogHash->put(updatedDog);
