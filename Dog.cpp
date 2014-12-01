@@ -1,3 +1,20 @@
+/*
+CIS22C Team 4 Project:	Dog Shelter Management Program
+
+Purpose:	The function of our software is to store, organize and
+manage data about dogs in a shelter.
+
+@author
+Jason Woodruff	-	Project Coordinator
+Stacy Wheeler	-	Data Record
+Bryson Li		-	I/O
+James Juchau	-	Hashed Table
+Kevin Chen		-	Binary Search Tree
+
+@version	1.5
+@since		11/30/2014
+*/
+
 using namespace std;
 
 #include<iostream>
