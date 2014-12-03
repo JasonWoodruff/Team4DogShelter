@@ -2,9 +2,9 @@
 CIS22C Team 4 Project:	Dog Shelter Management Program
 
 Purpose:	The function of our software is to store, organize and
-			manage data about dogs in a shelter.
+manage data about dogs in a shelter.
 
-@author		
+@author
 Jason Woodruff	-	Project Coordinator
 Stacy Wheeler	-	Data Record
 Bryson Li		-	I/O
@@ -27,18 +27,18 @@ using namespace std;
 
 //File Operations
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree);
-bool updateDogFile(HashMap* dogHash);							
+bool updateDogFile(HashMap* dogHash);
 char yesNoInput(string prompt);
 
 //Main Menu and Options
-bool mainMenu();														
+bool mainMenu();
 int getMainMenuChoice();
 bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree);
 
 //Dog Options (Add/Remove/Display)
-bool addDog(HashMap* dogHash, avlTree* dogTree);						
-bool removeDog(HashMap* dogHash, avlTree* dogTree);					
-bool displayDogInfoByIdSearch(HashMap* dogHash);						
+bool addDog(HashMap* dogHash, avlTree* dogTree);
+bool removeDog(HashMap* dogHash, avlTree* dogTree);
+bool displayDogInfoByIdSearch(HashMap* dogHash);
 
 //Update Dog (Team Choice)
 bool updateDog(HashMap* dogHash, avlTree* dogTree);
@@ -58,13 +58,13 @@ bool isValidDogId(string dogId);
 //Filename
 const string FILENAME = "dog.txt";
 
-/*	
-	main loads the database into data structures (Hash and Tree) then processes menu choices until the user decides to exit
+/*
+main loads the database into data structures (Hash and Tree) then processes menu choices until the user decides to exit
 */
 int main()
 {
 	int choice = 0;
-	
+
 	HashMap* dogHash = new HashMap();
 	avlTree* dogTree = new avlTree();
 	readDogsFromFile(dogHash, dogTree);
@@ -86,13 +86,13 @@ int main()
 
 	delete dogHash;
 	delete dogTree;
-	
+
 	system("pause");
 	return 0;
 }
 
 /*
-	mainMenu displays a menu of options
+mainMenu displays a menu of options
 */
 bool mainMenu()
 {
@@ -113,8 +113,8 @@ bool mainMenu()
 }
 
 /*
-	getMainMenuChoice gets a valid menu choice from the user and returns it
-	@return	-	choice is a valid menu choice (integer between 1 and 10)
+getMainMenuChoice gets a valid menu choice from the user and returns it
+@return	-	choice is a valid menu choice (integer between 1 and 10)
 */
 int getMainMenuChoice()
 {
@@ -135,85 +135,91 @@ int getMainMenuChoice()
 }
 
 /*
-	processMainMenuChoice handles each menu option
-	@pre	-	choice is an integer between 1 and 10
-	@param	-	choice is the menu choice, an integer between 1 and 10
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
+processMainMenuChoice handles each menu option
+@pre	-	choice is an integer between 1 and 10
+@param	-	choice is the menu choice, an integer between 1 and 10
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
 */
 bool processMainMenuChoice(int choice, HashMap* dogHash, avlTree* dogTree)
 {
 	switch (choice)
 	{
-		case 1:
-		{
-			addDog(dogHash, dogTree);
-			break;
-		}
-		case 2:
-		{
-			removeDog(dogHash, dogTree);
-			break;
-		}
-		case 3:
-		{
-			displayDogInfoByIdSearch(dogHash);
-			break;
-		}
-		case 4:
-		{
-			updateDog(dogHash, dogTree);
-			break;
-		}
-		case 5:
-		{
-			dogHash->display();
-			cout << "Scroll up to view all entries." << endl;
-			system("pause");
-			cout << endl;
-			break;
-		}
-		case 6:
-		{
-			dogTree->inorder();
-			cout << "Scroll up to view all entries." << endl;
-			system("pause");
-			cout << endl;
-			break;
-		}
-		case 7:
-		{
-			dogTree->display(1);
-			cout << endl << endl;
-			break;
-		}
-		case 8:
-		{
-			displayEfficiencyReport(dogHash, dogTree);
-			break;
-		}
-		case 9:
-		{
-			delete dogHash;
-			delete dogTree;
-			break;
-		}
-		case 10:
-		{
-			updateDogFile(dogHash);
-			cout << "Thank you, now exiting..." << endl << endl;
-			break;
-		}
+	case 1:
+	{
+		addDog(dogHash, dogTree);
+		break;
+	}
+	case 2:
+	{
+		removeDog(dogHash, dogTree);
+		break;
+	}
+	case 3:
+	{
+		displayDogInfoByIdSearch(dogHash);
+		break;
+	}
+	case 4:
+	{
+		updateDog(dogHash, dogTree);
+		break;
+	}
+	case 5:
+	{
+		cout << "DOGS IN HASH SEQUENCE" << endl;
+		cout << "---------------------" << endl;
+		dogHash->display();
+		cout << "Scroll up to view all entries." << endl;
+		system("pause");
+		cout << endl;
+		break;
+	}
+	case 6:
+	{
+		cout << "DOGS IN KEY SEQUENCE" << endl;
+		cout << "--------------------" << endl;
+		dogTree->inorder();
+		cout << "Scroll up to view all entries." << endl;
+		system("pause");
+		cout << endl;
+		break;
+	}
+	case 7:
+	{
+		dogTree->display(1);
+		cout << endl << endl;
+		break;
+	}
+	case 8:
+	{
+		cout << "EFFICIENCY REPORT" << endl;
+		cout << "-----------------" << endl;
+		displayEfficiencyReport(dogHash, dogTree);
+		break;
+	}
+	case 9:
+	{
+		delete dogHash;
+		delete dogTree;
+		break;
+	}
+	case 10:
+	{
+		updateDogFile(dogHash);
+		cout << "Thank you, now exiting..." << endl << endl;
+		break;
+	}
 	}
 	return true;
 }
 
 /*
-	readDogsFromFile reads each line of 'dog.txt', instantiates a Dog object with the line's data, then adds the Dog to the Hash Table and AVL Tree
-	@pre	-	FILENAME (global constant string) is a valid file path
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
-	@post	-	dogHash and dogTree now store the Dogs from 'dog.txt'
+readDogsFromFile reads each line of 'dog.txt', instantiates a Dog object with the line's data, then adds the Dog to the Hash Table and AVL Tree
+@pre	-	FILENAME (global constant string) is a valid file path
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
+@post	-	dogHash and dogTree now store the Dogs from 'dog.txt'
 */
 bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 {
@@ -243,7 +249,7 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 		{
 			//instantiate a new Dog object
 			Dog* dog = new Dog(tempId, tempName, tempGender, tempAge, tempBreed, tempDesc);
-		
+
 			//populate the Hash Table
 			dogHash->put(dog);
 
@@ -251,17 +257,17 @@ bool readDogsFromFile(HashMap* dogHash, avlTree* dogTree)
 			dogTree->insert(dog);
 		}
 	}
-	
+
 	//close the file
 	dogFile.close();
 	return true;
 }
 
 /*
-	updateDogFile updates 'dog.txt' with the contents of the Hash Table
-	@pre	-	FILENAME (global constant string) is a valid file path
-	@param	-	dogHash is a Hash Table of Dog objects
-	@post	-	'dog.txt' is updated with the Dogs in the Hash Table (if yes) or remains the same (if no)
+updateDogFile updates 'dog.txt' with the contents of the Hash Table
+@pre	-	FILENAME (global constant string) is a valid file path
+@param	-	dogHash is a Hash Table of Dog objects
+@post	-	'dog.txt' is updated with the Dogs in the Hash Table (if yes) or remains the same (if no)
 */
 bool updateDogFile(HashMap* dogHash)
 {
@@ -275,13 +281,13 @@ bool updateDogFile(HashMap* dogHash)
 	{
 		//open the file
 		out.open(FILENAME.c_str());
-		
+
 		//write to the file
 		dogHash->writeToFile(out);
-		
+
 		if (out.good())
 			cout << "File succesfully saved" << endl;
-		
+
 		//close the file
 		out.close();
 	}
@@ -292,9 +298,9 @@ bool updateDogFile(HashMap* dogHash)
 }
 
 /*
-	yesNoInput gets a valid yes/no choice from the user and returns it
-	@param	-	prompt is a message prompt
-	@return	-	choice is a valid yes/no choice ('Y' or 'N')
+yesNoInput gets a valid yes/no choice from the user and returns it
+@param	-	prompt is a message prompt
+@return	-	choice is a valid yes/no choice ('Y' or 'N')
 */
 char yesNoInput(string prompt)
 {
@@ -313,24 +319,24 @@ char yesNoInput(string prompt)
 }
 
 /*
-	addDog creates a new Dog and adds it to the Hash Table and AVL Tree or discards it, depending on user input
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
-	@post	-	the new Dog is discarded or added to the Hash Table and AVL Tree
+addDog creates a new Dog and adds it to the Hash Table and AVL Tree or discards it, depending on user input
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
+@post	-	the new Dog is discarded or added to the Hash Table and AVL Tree
 */
 bool addDog(HashMap* dogHash, avlTree* dogTree)
-{	
+{
 	Dog* newDog = new Dog;
 
 	string newName, newGender, newAge, newBreed, newDescription;
-	char yn='x';	//holds yes/no choice for finalizing
+	char yn = 'x';	//holds yes/no choice for finalizing
 	system("CLS");
-	
+
 	//get the name
 	cout << "Please enter the dog's name." << endl;
 	cin.ignore();
 	getline(cin, newName); newName[0] = toupper(newName[0]);          //capitalizes first letter to homogenize data
-	
+
 	//get the gender
 	while (newGender != "Male" && newGender != "Female")
 	{
@@ -357,7 +363,7 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 	getline(cin, newDescription); newDescription[0] = toupper(newDescription[0]);
 
 	//clear screen for aesthetics
-	system("CLS"); 
+	system("CLS");
 
 	//display the new Dog's attributes
 	cout << "Name: " << newName << endl;
@@ -365,28 +371,28 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 	cout << "Gender: " << newGender << endl;
 	cout << "Breed: " << newBreed << endl;
 	cout << "Description: " << newDescription << endl;
-	
+
 	//get the yes/no input
 	yn = yesNoInput("Finalize this new dog? (Y/N): ");
-	
+
 	//no was chosen, discard the dog
 	if (yn == 'N'){ cout << "Dog discarded. Returning to main menu..." << endl; system("pause"); system("CLS"); }
-	
+
 	//yes was chosen, set the new Dog's attributes and add it to the data structures
 	if (yn == 'Y')
-	{ 
-		newDog->setName(newName); 
+	{
+		newDog->setName(newName);
 		newDog->setBreed(newBreed);
 		newDog->setGender(newGender);
 		newDog->setAge(newAge);
 		newDog->setDescription(newDescription);
-		
+
 		//add the Dog to the Hash Table
 		dogHash->put(newDog);
-		
+
 		//add the Dog to the AVL Tree
 		dogTree->insert(newDog);
-		
+
 		cout << "Dog finalized. Returning to main menu..." << endl;
 		system("pause"); system("CLS");
 	}
@@ -395,15 +401,15 @@ bool addDog(HashMap* dogHash, avlTree* dogTree)
 }
 
 /*
-	removeDog removes a Dog from the data structures if found by ID search
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
-	@post	-	the Dog is removed from the Hash Table and AVL Tree if found
+removeDog removes a Dog from the data structures if found by ID search
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
+@post	-	the Dog is removed from the Hash Table and AVL Tree if found
 */
 bool removeDog(HashMap* dogHash, avlTree* dogTree)
 {
 	string dogId;
-	
+
 	//get the Dog ID
 	cout << "Enter the ID of the dog to remove.  Use the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
@@ -429,13 +435,13 @@ bool removeDog(HashMap* dogHash, avlTree* dogTree)
 }
 
 /*
-	displayDogInfoByIdSearch performs a Hash Table search to find a Dog by ID and displays its attributes if found
-	@param	-	dogHash is a Hash Table of Dog objects
+displayDogInfoByIdSearch performs a Hash Table search to find a Dog by ID and displays its attributes if found
+@param	-	dogHash is a Hash Table of Dog objects
 */
 bool displayDogInfoByIdSearch(HashMap* dogHash)
 {
 	string dogId;
-	
+
 	//get the Dog ID
 	cout << "Enter the ID of the Dog to search for.  Use the format \"DOG###\"\n";
 	cout << "Enter the ID here: ";
@@ -450,7 +456,7 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 		cin >> dogId;
 		cout << endl;
 	}
-	
+
 	//get the Dog from the Hash Table
 	Dog *dog = dogHash->get(dogId);
 
@@ -464,10 +470,10 @@ bool displayDogInfoByIdSearch(HashMap* dogHash)
 	return true;
 }
 
-/*	
-	display data structure efficiences including Load Factor, Longest Linked List, and Average Number of Nodes in Linked List
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
+/*
+display data structure efficiences including Load Factor, Longest Linked List, and Average Number of Nodes in Linked List
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
 */
 bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree)
 {
@@ -482,27 +488,27 @@ bool displayEfficiencyReport(HashMap* dogHash, avlTree* dogTree)
 	cout << "Average Number of Nodes in Linked List:\t\t" << linksPerElement << endl;
 	cout << "Height of AVL Tree:\t\t\t\t" << dogTree->getHeight() << endl;
 	cout << endl;
-	
+
 	return true;
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	updateDog searches the Hash Table for a Dog and allows the user to update its attributes if found
-	
-	If found:
-	The original Dog's attributes are saved in strings before the Dog is removed from the Hash Table and AVL Tree
-	The user is given a menu to update the Dog's name, age, and description (by changing the strings)
-	A new Dog is created with the saved attributes (and any changes made to name, age, or description) of the original Dog
-	The new Dog is added to the Hash Table and AVL Tree
+updateDog searches the Hash Table for a Dog and allows the user to update its attributes if found
 
-	If not found:
-	A 'not found' message is displayed
+If found:
+The original Dog's attributes are saved in strings before the Dog is removed from the Hash Table and AVL Tree
+The user is given a menu to update the Dog's name, age, and description (by changing the strings)
+A new Dog is created with the saved attributes (and any changes made to name, age, or description) of the original Dog
+The new Dog is added to the Hash Table and AVL Tree
 
-	@param	-	dogHash is a Hash Table of Dog objects
-	@param	-	dogTree is an AVL Tree of Dog objects
-	@post	-	if found, the Dog is deleted and a new Dog is added to take its place
+If not found:
+A 'not found' message is displayed
+
+@param	-	dogHash is a Hash Table of Dog objects
+@param	-	dogTree is an AVL Tree of Dog objects
+@post	-	if found, the Dog is deleted and a new Dog is added to take its place
 */
 bool updateDog(HashMap *dogHash, avlTree *dogTree)
 {
@@ -559,9 +565,9 @@ bool updateDog(HashMap *dogHash, avlTree *dogTree)
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	updateDogMenu displays a menu of options
+updateDogMenu displays a menu of options
 */
 bool updateDogMenu()
 {
@@ -576,10 +582,10 @@ bool updateDogMenu()
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	getUpdateDogMenuChoice() gets a valid menu choice from the user and returns it
-	@return	-	choice is a valid menu choice (integer between 1 and 4)
+getUpdateDogMenuChoice() gets a valid menu choice from the user and returns it
+@return	-	choice is a valid menu choice (integer between 1 and 4)
 */
 int getUpdateDogMenuChoice()
 {
@@ -600,50 +606,50 @@ int getUpdateDogMenuChoice()
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	processUpdateDogMenuChoice handles each menu option
-	@pre	-	choice is an integer between 1 and 4
-	@param	-	id is a reference to the string holding the Dog id
-	@param	-	name is a reference to the string holding the Dog name
-	@param	-	age is a reference to the string holding the Dog age
-	@param	-	gender is a reference to the string holding the Dog gender
-	@param	-	breed is a reference to the string holding the Dog breed
-	@param	-	desc is a reference to the string holding the Dog description
+processUpdateDogMenuChoice handles each menu option
+@pre	-	choice is an integer between 1 and 4
+@param	-	id is a reference to the string holding the Dog id
+@param	-	name is a reference to the string holding the Dog name
+@param	-	age is a reference to the string holding the Dog age
+@param	-	gender is a reference to the string holding the Dog gender
+@param	-	breed is a reference to the string holding the Dog breed
+@param	-	desc is a reference to the string holding the Dog description
 */
 bool processUpdateDogMenuChoice(int choice, string& id, string& name, string& age, string& gender, string& breed, string& desc)
 {
 	switch (choice)
 	{
-		case 1:
-		{
-			updateName(name);
-			break;
-		}
-		case 2:
-		{
-			updateAge(age);
-			break;
-		}
-		case 3:
-		{
-			updateDesc(desc);
-			break;
-		}
-		case 4:
-		{
-			cout << "Returning to Main Menu..." << endl << endl;
-			break;
-		}
+	case 1:
+	{
+		updateName(name);
+		break;
+	}
+	case 2:
+	{
+		updateAge(age);
+		break;
+	}
+	case 3:
+	{
+		updateDesc(desc);
+		break;
+	}
+	case 4:
+	{
+		cout << "Returning to Main Menu..." << endl << endl;
+		break;
+	}
 	}
 	return true;
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	updateName gets a new name from the user and stores it in name
-	@param	-	name is a reference to the string holding the Dog name
+updateName gets a new name from the user and stores it in name
+@param	-	name is a reference to the string holding the Dog name
 */
 bool updateName(string& name)
 {
@@ -657,10 +663,10 @@ bool updateName(string& name)
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	updateAge gets a new age from the user and stores it in age
-	@param	-	age is a reference to the string holding the Dog age
+updateAge gets a new age from the user and stores it in age
+@param	-	age is a reference to the string holding the Dog age
 */
 bool updateAge(string& age)
 {
@@ -680,10 +686,10 @@ bool updateAge(string& age)
 }
 
 /*
-	TEAM CHOICE
+TEAM CHOICE
 
-	updateDesc gets a new description from the user and stores it in desc
-	@param	-	desc is a reference to the string holding the Dog description
+updateDesc gets a new description from the user and stores it in desc
+@param	-	desc is a reference to the string holding the Dog description
 */
 bool updateDesc(string& desc)
 {
@@ -697,9 +703,9 @@ bool updateDesc(string& desc)
 }
 
 /*
-	isValidDogId return true or false depending on whether a given Dog ID is formatted correctly
-	@param	-	dogId is the Dog ID to be evaluated
-	@return -	isValid is true if the dogId is correctly formatted or false if dogId is incorrectly formatted
+isValidDogId return true or false depending on whether a given Dog ID is formatted correctly
+@param	-	dogId is the Dog ID to be evaluated
+@return -	isValid is true if the dogId is correctly formatted or false if dogId is incorrectly formatted
 */
 bool isValidDogId(string dogId)
 {
@@ -713,5 +719,3 @@ bool isValidDogId(string dogId)
 
 	return isValid;
 }
-
-

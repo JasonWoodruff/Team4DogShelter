@@ -1,5 +1,4 @@
 DOG001,Rex,Male,Puppy,English Setter,Playful
-DOG001,DuplicateDog,Male,Puppy,English Setter,This dog overwrote Rex, the other DOG001
 DOG002,Max,Male,Young,Russel Terrier,Lazy
 DOG003,Alice,Female,Puppy,French Bulldog,Shy
 DOG004,Ang,Male,Adult,Cocker Spaniel,Likes the outdoors
@@ -24,3 +23,8 @@ DOG022,Lucy,Female,Young,Dachschund,Energetic and friendly
 DOG023,Daisy,Female,Young,Rottweiler,Energetic and loyal
 DOG024,Lily,Female,Adult,Pomeranian,Cute and friendly
 DOG025,Molly,Female,Young,Great Dane,Keeps to herself
+DOG026,Jack,Male,Puppy,Beagle,Eats a lot
+DOG027,Jill,Female,Adult,Poodle,Loves taking walks
+DOG028,Sparky,Male,Senior,Chihuahua,Spritely
+DOG029,Rex,Male,Young,Daschund,Playful
+DOG030,Rover,Male,Puppy,Bloodhound,Sleeps all the time
